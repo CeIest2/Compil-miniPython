@@ -1,0 +1,5 @@
+idf: 1
+constantes: 2
+mots-clés: 3
+carac_spéciaux_doubles: 4
+carac_spéciaux_simples: 5

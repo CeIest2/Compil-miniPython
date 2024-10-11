@@ -1,5 +1,16 @@
-idf: 1
-constantes: 2
-mots-clés: 3
-carac_spéciaux_doubles: 4
-carac_spéciaux_simples: 5
+"+" c'est 1
+"-" c'est 2
+"*" c'est 3
+"/" c'est 4
+"=" c'est 5
+"%" c'est 6
+idf c'est 7
+cst c'est 8
+if c'est 9
+then c'est 10
+else c'est 11
+"<" c'est 12
+">" c'est 13
+"(" c'est 14
+")" c'est 15
+

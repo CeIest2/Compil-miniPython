@@ -17,7 +17,7 @@ else c'est 11
 "]" c'est 17
 char c'est 18
 not c'est 19
-"#" c'est 20               -> pas utile comme "
+def c'est 20
 or c'est 21
 and c'est 22
 "<=" c'est 23
@@ -37,6 +37,7 @@ BEGIN c'est 36
 END c'est 37
 NEWLINE c'est 38
 EOF c'est 39
-def c'est 40
 
 -> lettres avec accent, ".", "|", "&", ";" pas dens le langage et autres
+-> " debut string
+-> # debut commentaire

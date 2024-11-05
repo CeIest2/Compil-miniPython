@@ -1,4 +1,5 @@
 import re
+import os
 
 class Liste_token:
 
@@ -16,7 +17,7 @@ class Liste_token:
 
     def add_token_in_liste(self,token, etat):
 
-        print(f" on add un token : {token}")
+        #print(f" on add un token : {token}")
         
         if token in self.dict_lexique.keys():
             self.liste_token.append(self.dict_lexique[token])
@@ -46,7 +47,7 @@ class Liste_token:
                 self.liste_token.append((41,self.dico_char[token]))
 
         else:
-            print(f" y a une merde quelque part là, token pa identifier : |{token}| etat : {etat}")
+            self.message_erreur("Caractère non reconnue par le language", token)
             return -1
 
         return None
@@ -56,23 +57,20 @@ class Liste_token:
         texte_reconstruit = ""
         indentation_level = 0  # Pour gérer le niveau d'indentation
 
-        # Parcours de chaque token dans `self.liste_token`
         for token in self.liste_token:
             if isinstance(token, int):
                 if token == 38:  # NEWLINE
                     texte_reconstruit = texte_reconstruit.rstrip() + "\n" + "    " * indentation_level
-                elif token == 36:  # BEGIN (augmentation de l'indentation)
+                elif token == 36:  # BEGIN 
                     indentation_level += 1
                     texte_reconstruit = texte_reconstruit.rstrip() + "\n" + "    " * indentation_level
-                elif token == 37:  # END (diminution de l'indentation)
+                elif token == 37:  # END 
                     indentation_level = max(0, indentation_level - 1)
                     texte_reconstruit = texte_reconstruit.rstrip() + "\n" + "    " * indentation_level
                 else:
-                    # Autres tokens de `dict_lexique`
                     texte_reconstruit += list(self.dict_lexique.keys())[list(self.dict_lexique.values()).index(token)] + " "
             
             elif isinstance(token, tuple):
-                # Cas des tokens avec des valeurs associées (identifiants, chars, et nombres)
                 token_type, token_value = token
                 
                 if token_type == 40:  # Identifiant
@@ -101,6 +99,61 @@ class Liste_token:
 
         return texte_reconstruit
 
+    def reconstruction_last_line(self):
+        if not self.liste_token:
+            return ""
+        
+        index = len(self.liste_token) - 1
+
+        if self.liste_token[index] == 38:
+            index -= 1
+            if index < 0:
+                return ""
+        
+        ligne_tokens = []
+        while index >= 0 and self.liste_token[index] != 38:
+            ligne_tokens.insert(0, self.liste_token[index])  # Insère au début pour garder l'ordre
+            index -= 1
+
+        ligne_texte = ""
+        for token in ligne_tokens:
+            if isinstance(token, int):
+                if token in self.dict_lexique.values():
+                    ligne_texte += list(self.dict_lexique.keys())[list(self.dict_lexique.values()).index(token)] + " "
+            
+            elif isinstance(token, tuple):
+                token_type, token_value = token
+                if token_type == 40:  # Identifiant
+                    for ident, id_value in self.dico_idf.items():
+                        if id_value == token_value:
+                            ligne_texte += ident + " "
+                            break
+                elif token_type == 41:  # Char
+                    for char, char_value in self.dico_char.items():
+                        if char_value == token_value:
+                            ligne_texte += '"' + char + '" '
+                            break
+                elif token_type == 42:  # Nombre
+                    for nombre, num_value in self.dico_number.items():
+                        if num_value == token_value:
+                            ligne_texte += nombre + " "
+                            break
+        
+        return ligne_texte.strip()
+
+    def est_dans_intervalle_int64(self,valeur):
+        # Bornes d'un entier signé 64 bits
+        INT64_MIN = -2**63
+        INT64_MAX = 2**63 - 1
+
+        # Vérifier si la valeur est dans l'intervalle
+        return INT64_MIN <= valeur <= INT64_MAX
+    
+    def message_erreur(self,type_erreur, token_probleme):
+        last_line = self.reconstruction_last_line()
+
+        return f"""File "{os.path.abspath(__file__)}", line {self.liste_token.count(38)+1} \n{last_line}{token_probleme}\n""" + """ """ * len(last_line) + """^^^""" +f"\n{type_erreur}"
+
 
 
 
@@ -113,9 +166,6 @@ def analyseur(fichier : str):
     etat = "debut_ligne"
 
     liste_token = Liste_token()
-    dico_idf = {}
-    dico_char = {}
-    dico_number = {}
     erreur = None
     indentation_courante = [0]
 
@@ -126,6 +176,11 @@ def analyseur(fichier : str):
                 break
             
             if etat == "debut_ligne":
+                if caractere == "\n":
+                    liste_token.add_token_in_liste("NEWLINE", etat)
+                    caractere = fichier.read(1)
+                    etat = "debut_ligne"
+                    continue
                 # On compte le nombre d'indentation
                 indentation = 0
                 if caractere == ' ':
@@ -134,11 +189,6 @@ def analyseur(fichier : str):
                     while caractere == ' ':
                         indentation += 1
                         caractere = fichier.read(1)
-                        continue
-                    if caractere == "\n":
-                        caractere = fichier.read(1)
-                        etat = "debut_ligne"
-                        continue
 
                 # ici on va faire toute la gestion des indentations au début des lignes
                 if indentation == indentation_courante[-1] : pass
@@ -154,8 +204,8 @@ def analyseur(fichier : str):
                     if not indentation_courante or indentation_courante[-1] != indentation:
                         erreur = "erreur avec les indentations"
                         print("erreur dindentation ici")
-                        print(liste_token.reconstruire_texte())
-                        return erreur
+                        print(liste_token.message_erreur("Erreur d'indentation", caractere))
+                        return liste_token, -1
 
             if caractere == " ":
                 caractere = fichier.read(1)
@@ -177,20 +227,24 @@ def analyseur(fichier : str):
             if caractere in ("1","2","3","4","5","6","7","8","9","0"):
                 # cas de lecteur d'un entier
                 if etat == "debut_ligne":
-                    return " on ne peut pas avoir de int au bébut d une ligne"
+                    print(liste_token.message_erreur(" int en début de ligne", caractere))
+                    return liste_token,-1 
+                
                 nombre = caractere
                 etat = "nombre"
                 caractere = fichier.read(1)
                 while caractere in ("1","2","3","4","5","6","7","8","9","0"):
                     nombre += caractere
                     caractere = fichier.read(1)
-                liste_token.add_token_in_liste(nombre, etat)
-                etat = "in_line"
-                continue
-            
+                if liste_token.est_dans_intervalle_int64(int(nombre)):
+                    liste_token.add_token_in_liste(nombre, etat)
+                    etat = "in_line"
+                    continue
+                else:
+                    print(liste_token.message_erreur("int overflow", nombre))
+                    return liste_token, -1
 
             if re.compile(r'[a-zA-Z_]').match(caractere):
-                print("oui")
                 etat = "identifiant"
                 identifiant_courant = caractere
                 caractere = fichier.read(1)
@@ -244,7 +298,8 @@ def analyseur(fichier : str):
                 expression = caractere
                 caractere = fichier.read(1)
                 if caractere != "=":
-                    return "erreur, il faut un = normalement ici"
+                    print(liste_token.message_erreur("! n'est pas disponible en mini-python, != et not le sont", caractere))
+                    return liste_token,-1
                 else:
                     expression += caractere
                     liste_token.add_token_in_liste(expression, etat)
@@ -264,23 +319,23 @@ def analyseur(fichier : str):
                 caractere = fichier.read(1)
                 continue
 
-            print(liste_token.liste_token)
-            print(f"y a erreur la normalement {caractere}")
-            return -1
-
-
             
 
+            # si on arrive ici c'est que le caractère n'est pas reconnue, donc il y a erreur 
+            print(liste_token.message_erreur("Caractère non recoonnue par le language", caractere))
+            return liste_token,-1
 
 
+    return liste_token, 1
 
-                        
 
+if __name__=='__main__':
 
+    liste_token, reussite_compilation = analyseur("test_2.txt")
+
+    if reussite_compilation == 1: print("analyse du fichier a réussi")
+    elif reussite_compilation == -1 : print("analyse du fichier n'a pas pu aboutir")
+    else: print("on est pas sencé avoir se cas là")
 
     print(liste_token.reconstruire_texte())
     print(liste_token.liste_token)
-    print("finit")
-
-
-analyseur("test_2.txt")

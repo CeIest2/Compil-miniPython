@@ -325,17 +325,22 @@ def analyseur(fichier : str):
             print(liste_token.message_erreur("Caractère non recoonnue par le language", caractere))
             return liste_token,-1
 
+    # il faut aussi dépile les dernières imdentations et rajouter le token d end of file
+    while indentation_courante:
+        liste_token.add_token_in_liste("END", etat)
+        indentation_courante.pop()
+    liste_token.add_token_in_liste("EOF", etat)
 
     return liste_token, 1
 
 
 if __name__=='__main__':
 
-    liste_token, reussite_compilation = analyseur("test_2.txt")
+    liste_token, reussite_compilation = analyseur("_test_2.txt")
 
     if reussite_compilation == 1: print("analyse du fichier a réussi")
     elif reussite_compilation == -1 : print("analyse du fichier n'a pas pu aboutir")
     else: print("on est pas sencé avoir se cas là")
 
-    print(liste_token.reconstruire_texte())
-    print(liste_token.liste_token)
+    #print(liste_token.reconstruire_texte())
+    #print(liste_token.liste_token)

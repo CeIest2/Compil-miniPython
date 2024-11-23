@@ -168,9 +168,48 @@ class Grammaire:
         return suivants
         
 
+class TableAnalyse:
+    def __init__(self, grammaire):
+        self.grammaire = grammaire
+        self.table = self._construire_table()
+
+    def _construire_table(self):
+        table = {}
+        
+        # Initialiser la table
+        for nt in self.grammaire.non_terminaux:
+            table[nt] = {}
+        
+        # Remplir la table
+        for nt, productions in self.grammaire.regles.items():
+            for production in productions:
+                if production[0].name == '^':
+                    table[nt][production[0].name] = self.grammaire.suivants[nt]
+                # Si la production commence par un terminal
+                elif production[0].type_token == "terminal":
+                    table[nt][production[0].name] = production
+                    
+                # Si la production commence par un non-terminal
+                elif production[0].type_token == "non_terminal":
+
+                    for terminal in self.grammaire.premiers[production[0].name]:
+                        table[nt][terminal] = production
+            
+        print(table)
+        return table
+
+
 
 if __name__ == '__main__':
     grammaire_test = Grammaire('grammaire.txt')
     print(f"Les premiers de la grammaire : {grammaire_test.premiers}\nLes suivants de la grammaire : {grammaire_test.suivants}")
+    table_analyse = TableAnalyse(grammaire_test)
+    print(table_analyse)
+    print("####")
+    # si on a un non terminal E et que l'on lis le caractère correpondant on token 48 alors le token suivant l'unité lexical suivante doit être T  
+    print(table_analyse.table['E']['48'][0].name)
+
+    # si on a un non termianl TP et que on lis 42 alors l'unité suivante doit être 42 
+    print(table_analyse.table['TP']['42'][0].name)
 
 

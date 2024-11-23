@@ -1,8 +1,10 @@
-A -> 1 2 S S 3
-S -> 4 X 5 Y
-X -> 6 2 6
-Y -> Z 8 10 B
-B -> 11 Z 12
-X -> 13 R 9
-Z -> 71
-Z -> ^
+E -> T EP
+EP -> 43 T EP
+EP -> 45 T EP
+EP -> ^
+T -> F TP
+TP -> 42 F TP
+TP -> 47 F TP
+TP -> ^
+F -> 40 E 41
+F -> 48

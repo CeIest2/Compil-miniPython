@@ -4,8 +4,9 @@
 "/" c'est 4
 "=" c'est 5
 "%" c'est 6
-idf c'est 7
-cst c'est 8
+identifiant c'est 40
+char c'est 41
+number c'est 42
 if c'est 9
 then c'est 10
 else c'est 11
@@ -37,6 +38,7 @@ BEGIN c'est 36
 END c'est 37
 NEWLINE c'est 38
 EOF c'est 39
+"=" c'est 43
 
 -> lettres avec accent, ".", "|", "&", ";" pas dens le langage et autres
 -> " debut string

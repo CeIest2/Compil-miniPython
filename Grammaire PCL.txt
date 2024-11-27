@@ -1,0 +1,33 @@
+﻿<file>                ::= NEWLINE? <def>* <stmt>+ EOF
+<def>                ::= def <ident> (<ident>,*) : <suite>
+<suite>        ::= <simple_stmt> NEWLINE
+                      | NEWLINE BEGIN <stmt>+ END
+<simple_stmt>::= return <expr>
+                   | <ident> <suite_ident_simple_stmt>
+                   | <const> <expr2> <suite_expr>
+                   |  - <expr> <expr2> <suite_expr>
+                   | not <expr> <expr2> <suite_expr>
+                   | [<expr>,*] <expr2> <suite_expr>
+                   | (<expr>) <expr2> <suite_expr>
+   | print (<expr>)
+<suite_ident_simple_stmt> ::= =<expr>
+                   | <suite_ident_expr>
+<suite_expr>        ::= [<expr>] = <expr> | e
+<stmt>         ::= <simple_stmt> NEWLINE
+                   | if <expr> : <suite> <suite_if>
+                   | for <ident> in <expr> : <suite>
+<suite_if>        ::= else : <suite> | e
+<expr>                ::= <const> <expr2>
+                   | <ident> <suite_ident_expr>
+                   | - <expr> <expr2>
+                   | not <expr> <expr2>
+                   | [<expr>,*] <expr2>
+                   | (<expr>) <expr2>
+<suite_ident_expr>        ::= <expr2> 
+   | (<expr>,*) <expr2>
+<expr2>        ::= [<expr>] <expr2>
+                   | <binop> <expr> <expr2>
+                   | e
+<binop>        ::= +|-|*|//|%|<=|>=|>|<|!=|==
+                   | and | or
+<const>        ::= <integer> | <string> | True | False | None

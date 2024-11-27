@@ -1,0 +1,16 @@
+Groupe :
+    - Célestin Morel
+    - Romain Samba
+    - David Guichard
+    - Livie Romanet
+
+
+
+To Do List : 
+
+- definir le lexique
+- analyseur lexical
+- definir grammaire
+    - rendre grammaire LL1
+- analyseur syntaxique
+- visualisation de l'arbre abstrait

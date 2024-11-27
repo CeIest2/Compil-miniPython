@@ -4,8 +4,9 @@
 "/" c'est 4
 "=" c'est 5
 "%" c'est 6
-idf c'est 7
-cst c'est 8
+identifiant c'est 40
+char c'est 41
+number c'est 42
 if c'est 9
 then c'est 10
 else c'est 11
@@ -15,9 +16,9 @@ else c'est 11
 ")" c'est 15
 "[" c'est 16
 "]" c'est 17
-carac c'est 18
+char c'est 18
 not c'est 19
-":" c'est 20
+def c'est 20
 or c'est 21
 and c'est 22
 "<=" c'est 23
@@ -37,6 +38,8 @@ BEGIN c'est 36
 END c'est 37
 NEWLINE c'est 38
 EOF c'est 39
-def c'est 40
-"#" c'est 41
+"=" c'est 43
 
+-> lettres avec accent, ".", "|", "&", ";" pas dens le langage et autres
+-> " debut string
+-> # debut commentaire

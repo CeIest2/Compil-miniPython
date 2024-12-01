@@ -201,15 +201,15 @@ class TableAnalyse:
 
 
 if __name__ == '__main__':
-    grammaire_test = Grammaire('grammaire.txt')
+    grammaire_test = Grammaire('Grammaire PCL.txt')
     print(f"Les premiers de la grammaire : {grammaire_test.premiers}\nLes suivants de la grammaire : {grammaire_test.suivants}")
     table_analyse = TableAnalyse(grammaire_test)
     print(table_analyse)
     print("####")
     # si on a un non terminal E et que l'on lis le caractère correpondant on token 48 alors le token suivant l'unité lexical suivante doit être T  
-    print(table_analyse.table['E']['48'][0].name)
+    print(table_analyse.table['<expr>']['40'][0].name)
 
     # si on a un non termianl TP et que on lis 42 alors l'unité suivante doit être 42 
-    print(table_analyse.table['TP']['42'][0].name)
+    print(table_analyse.table['<expr2>']['16'][0].name)
 
 

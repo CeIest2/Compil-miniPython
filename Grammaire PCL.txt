@@ -1,33 +1,61 @@
-﻿<file>                ::= NEWLINE? <def>* <stmt>+ EOF
-<def>                ::= def <ident> (<ident>,*) : <suite>
-<suite>        ::= <simple_stmt> NEWLINE
-                      | NEWLINE BEGIN <stmt>+ END
-<simple_stmt>::= return <expr>
-                   | <ident> <suite_ident_simple_stmt>
-                   | <const> <expr2> <suite_expr>
-                   |  - <expr> <expr2> <suite_expr>
-                   | not <expr> <expr2> <suite_expr>
-                   | [<expr>,*] <expr2> <suite_expr>
-                   | (<expr>) <expr2> <suite_expr>
-   | print (<expr>)
-<suite_ident_simple_stmt> ::= =<expr>
-                   | <suite_ident_expr>
-<suite_expr>        ::= [<expr>] = <expr> | e
-<stmt>         ::= <simple_stmt> NEWLINE
-                   | if <expr> : <suite> <suite_if>
-                   | for <ident> in <expr> : <suite>
-<suite_if>        ::= else : <suite> | e
-<expr>                ::= <const> <expr2>
-                   | <ident> <suite_ident_expr>
-                   | - <expr> <expr2>
-                   | not <expr> <expr2>
-                   | [<expr>,*] <expr2>
-                   | (<expr>) <expr2>
-<suite_ident_expr>        ::= <expr2> 
-   | (<expr>,*) <expr2>
-<expr2>        ::= [<expr>] <expr2>
-                   | <binop> <expr> <expr2>
-                   | e
-<binop>        ::= +|-|*|//|%|<=|>=|>|<|!=|==
-                   | and | or
-<const>        ::= <integer> | <string> | True | False | None
+﻿<file> -> <start_file> <start_func> <start_stmt> 39
+<start_file> -> 38
+<start_file> -> ^
+<start_func> -> <def> <start_func>
+<start_func> -> ^
+<start_stmt> -> <stmt> <start_stmt_2>
+<start_stmt_2> -> <stmt> <start_stmt_2>
+<start_stmt_2> -> ^
+<def> -> 20 40 14 40 <parameters> 15 5 <suite>
+<parameters> -> 31 40 <parameters>
+<parameters> -> ^
+<suite> -> <simple_stmt> 38
+<suite> -> 38 BEGIN <start_stmt> 37
+<simple_stmt> -> 35 <expr>
+<simple_stmt> -> 40 <suite_ident_simple_stmt>
+<simple_stmt> -> <const> <expr2> <suite_expr>
+<simple_stmt> -> 2 <expr> <expr2> <suite_expr>
+<simple_stmt> -> 19 <expr> <expr2> <suite_expr>
+<simple_stmt> -> 16 <expr> <depth> 17 <expr2> <suite_expr>
+<simple_stmt> -> 14 <expr> 15 <expr2> <suite_expr>
+<simple_stmt> -> 34 14 <expr> 15
+<depth> -> 31 <expr> <depth>
+<depth> -> ^
+<suite_ident_simple_stmt> -> 43 <expr>
+<suite_ident_simple_stmt> -> <suite_ident_expr>
+<suite_expr> -> 16 <expr> 17 43 <expr> 
+<suite_expr> -> ^
+<stmt> -> <simple_stmt> 38 
+<stmt> -> 9 <expr> 5 <suite> <suite_if>
+<stmt> -> 32 40 33 <expr> 5 <suite>
+<suite_if> -> 44 5 <suite>
+<suite_if> -> ^
+<expr> -> <const> <expr2>
+<expr> -> 40 <suite_ident_expr>
+<expr> -> 2 <expr> <expr2>
+<expr> -> 19 <expr> <expr2>
+<expr> -> 16 <expr> <depth> 17 <expr2>
+<expr> -> 14 <expr> 15 <expr2>
+<suite_ident_expr> -> <expr2>
+<suite_ident_expr> -> 14 <expr> <depth> 15 <expr2>
+<expr2> -> 16 <expr> 17 <expr2> 
+<expr2> -> <binop> <expr> <expr2>
+<expr2> -> ^
+<binop> -> 1
+<binop> -> 2
+<binop> -> 3
+<binop> -> 30
+<binop> -> 6
+<binop> -> 24
+<binop> -> 23
+<binop> -> 13
+<binop> -> 12
+<binop> -> 26
+<binop> -> 25
+<binop> -> 22
+<binop> -> 21
+<const> -> 42
+<const> -> 41
+<const> -> 27
+<const> -> 28
+<const> -> 29

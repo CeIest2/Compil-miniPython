@@ -10,7 +10,7 @@
 <parameters> -> 31 40 <parameters>
 <parameters> -> ^
 <suite> -> <simple_stmt> 38
-<suite> -> 38 BEGIN <start_stmt> 37
+<suite> -> 38 36 <start_stmt> 37
 <simple_stmt> -> 35 <expr>
 <simple_stmt> -> 40 <suite_ident_simple_stmt>
 <simple_stmt> -> <const> <expr2> <suite_expr>

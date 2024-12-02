@@ -157,7 +157,7 @@ class Liste_token:
 
 
 
-def analyseur(fichier : str):
+def analyseur(fichier : str) -> Liste_token:
     """
         On prend en entré le fichier à analyser 
         et on va retourner la liste des token et une erreur ( si il y a pas d erreur c'est None)
@@ -336,7 +336,7 @@ def analyseur(fichier : str):
 
 if __name__=='__main__':
 
-    liste_token, reussite_compilation = analyseur("_test_2.txt")
+    liste_token, reussite_compilation = analyseur("fichier_test/fichier_test_lexeur/mini_test.txt")
 
     if reussite_compilation == 1: print("analyse du fichier a réussi")
     elif reussite_compilation == -1 : print("analyse du fichier n'a pas pu aboutir")
@@ -344,3 +344,6 @@ if __name__=='__main__':
 
     #print(liste_token.reconstruire_texte())
     #print(liste_token.liste_token)
+    #print(liste_token.dico_idf)
+    #print(liste_token.dico_char)
+    #print(liste_token.dico_number)

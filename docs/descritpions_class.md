@@ -1,4 +1,38 @@
-# Documentation - Classes `Token` et `Grammaire`
+# Documentation - Classes 
+
+## Classe `Liste_token`
+
+Classe qui représente la liste de token en sortie de l'analyseur lexical
+
+### Attributs
+
+
+        dico_idf       : dictionnaire des différents identifiants  les clés sont les int et les valeur sont les identifiants en toute lettres
+        nb_identifiant : nombre d'indentifiants différents
+        dico_char      : dictionnaire des chaînes de caractères, même fonctinonement que dico_idf
+        nb_char        : ''
+        dico_number    : ''
+        nb_number      : ''
+        dict_lexique   : dictionnaire mot de la grammaire -> int de token 
+
+### Utilisation
+
+Dans le code on utilise cette classe d'abors dans l anaylseur lexical ou on construit un objet Liste_token du code à compiler.
+Puis dans l'analyseur syntaxique on pourra :
+
+```python
+liste_token, erreur = analyseur("fichier_a_analyser.txt")
+# pour avoir la liste des token :
+liste_token.liste_token
+# pour avoir le dictionnaire des identificateurs :
+liste_token.dico_idf
+# ...
+liste_token.dico_char
+# ...
+liste_token.dico_nb
+```
+
+
 ## Classe `Token`
 
 Cette classe représente un token qui peut être soit un terminal, soit un non-terminal. Elle est utilisée pour modéliser les éléments de la grammaire.

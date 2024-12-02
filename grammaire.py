@@ -17,6 +17,7 @@ class Grammaire:
 
     def __init__(self, fichier_regles):
         self.axiome = None
+        self.int_to_token = {1: "+", 2: "-", 3: "*", 4: "/", 5: ":", 6: "%", 9: "if", 10: "then", 12: "<", 13: ">", 14: "(", 15: ")", 16: "[", 17: "]", 19: "not", 20: "def", 21: "or", 22: "and", 23: "<=", 24: ">=", 25: "==", 26: "!=", 27: "True", 28: "False", 29: "None", 30: "//", 31: ",", 32: "for", 33: "in", 34: "print", 35: "return", 36: "BEGIN", 37: "END", 38: "NEWLINE", 39: "EOF", 40: "identifiant", 41: "char", 42: "number", 43: "=", 44: "else"}
         self.regles = self.init_regles(fichier_regles)
         print(self)
         self.non_terminaux = self.init_non_terminaux()
@@ -33,26 +34,29 @@ class Grammaire:
         
         # Pour chaque non-terminal dans les règles
         for non_terminal, productions in self.regles.items():
-            lignes = [f"{non_terminal} -> {' '.join(p.name for p in productions[0])}"]
+            size_skip = len(non_terminal) + 1
+            space = " " * size_skip
+            lignes = [f"{non_terminal} -> {' '.join(p.name if p.type_token == 'non_terminal' or p.name == '^' else self.int_to_token[int(p.name)] for p in productions[0])}"]
             
             for production in productions[1:]:
-                lignes.append(f"  -> {' '.join(p.name for p in production)}")
-            
+                lignes.append(f"{space}-> {' '.join(p.name if p.type_token == 'non_terminal' or p.name == '^' else self.int_to_token[int(p.name)] for p in production)}")            
             resultat += "\n".join(lignes) + "\n"
         
         return resultat.rstrip()
 
 
-    def init_regles(self, fichier_regles):
-        axiome = True # variable qui sert pour def l axiome
+    def init_regles(self, fichier_regles) -> dict:
+        axiome = True  # variable to set the axiom
         
         regles = {}
-
+        
         def est_terminal(element):
-            if element.isdigit(): return True  
+            # Check if an element is a terminal
+            if element.isdigit(): 
+                return True
             
-            # Cas d'un tuple (n,m)
-            if (element.startswith('(') and element.endswith(')') and 
+            # Handle tuple-like terminals (n,m)
+            if (element.startswith('(') and element.endswith(')') and
                 len(element.split(',')) == 2):
                 try:
                     n1 = element.strip('()').split(',')[0].strip()
@@ -60,17 +64,19 @@ class Grammaire:
                     return n1.isdigit() and n2.isdigit()
                 except:
                     return False
-            return False
-
+            
+            # Non-terminals are enclosed in <>
+            return not (element.startswith('<') and element.endswith('>'))
+        
         with open(fichier_regles, 'r') as fichier:
             for ligne in fichier:
-                
-
-                # Séparer la partie gauche et droite de la règle
+                # Separate left and right parts of the rule
                 parties = ligne.strip().split('->')
-                    
+                
                 non_terminal = parties[0].strip()
-                if axiome: self.axiome,axiome = non_terminal, False
+                if axiome: 
+                    self.axiome, axiome = non_terminal, False
+                
                 production = []
                 for element in parties[1].strip().split():
                     if est_terminal(element):
@@ -78,8 +84,9 @@ class Grammaire:
                     else:
                         new_token = Token("non_terminal", element)
                     production.append(new_token)
-               
+                
                 regles.setdefault(non_terminal, []).append(production)
+        
         return regles
 
         
@@ -195,21 +202,20 @@ class TableAnalyse:
                     for terminal in self.grammaire.premiers[production[0].name]:
                         table[nt][terminal] = production
             
-        print(table)
         return table
 
 
 
 if __name__ == '__main__':
     grammaire_test = Grammaire('Grammaire PCL.txt')
-    print(f"Les premiers de la grammaire : {grammaire_test.premiers}\nLes suivants de la grammaire : {grammaire_test.suivants}")
+    #print(f"Les premiers de la grammaire : {grammaire_test.premiers}\nLes suivants de la grammaire : {grammaire_test.suivants}")
     table_analyse = TableAnalyse(grammaire_test)
-    print(table_analyse)
+    #print(table_analyse)
     print("####")
     # si on a un non terminal E et que l'on lis le caractère correpondant on token 48 alors le token suivant l'unité lexical suivante doit être T  
-    print(table_analyse.table['<expr>']['40'][0].name)
+    #print(table_analyse.table['<expr>']['40'][0].name)
 
     # si on a un non termianl TP et que on lis 42 alors l'unité suivante doit être 42 
-    print(table_analyse.table['<expr2>']['16'][0].name)
+    #print(table_analyse.table['<expr2>']['16'][0].name)
 
 

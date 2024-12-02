@@ -18,28 +18,27 @@ Cette classe représente un token qui peut être soit un terminal, soit un non-t
 Cette classe sert à stocker et manipuler une grammaire formelle. Elle fournit des outils pour travailler sur les règles de grammaire, les ensembles des premiers et suivants des non-terminaux, et pour vérifier les propriétés de la grammaire.
 ### Attributs
 
-    regles : Un dictionnaire où les clés sont des non-terminaux et les valeurs sont des listes de productions. Chaque production est une liste de Token.
-    non_terminaux : Ensemble des non-terminaux présents dans la grammaire.
-    premiers : Dictionnaire associant chaque non-terminal à son ensemble de premiers.
+    regles dict[str] : List[List[Token]] : Un dictionnaire où les clés sont des non-terminaux et les valeurs sont des listes de productions. Chaque production est une liste de Token.
+    non_terminaux List[str] : Ensemble des non-terminaux présents dans la grammaire.
+    premiers dict[str] : set(str) : Dictionnaire associant chaque non-terminal à son ensemble de premiers.
 
 ### Méthodes
-Initialisation
+
 
     __init__(self, fichier_regles) : Charge les règles depuis un fichier et initialise les attributs principaux.
 
-Représentation
 
-    __str__(self) : Retourne une représentation textuelle de la grammaire, listant chaque non-terminal et ses productions.
 
-Chargement des règles
+    __str__(self) : Retourne une représentation textuelle de la grammaire, listant chaque non-terminal et ses productions. C'est pour faire print(grammaire)
+
 
     init_regles(self, fichier_regles) : Lit les règles de grammaire depuis un fichier et les stocke dans le dictionnaire regles.
 
-Non-terminaux
+
 
     init_non_terminaux(self) : Identifie et retourne l'ensemble des non-terminaux présents dans la grammaire.
 
-Premiers
+
 
     calculer_premiers(self) : Calcule l'ensemble des premiers pour chaque non-terminal de la grammaire.
 

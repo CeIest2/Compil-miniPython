@@ -16,13 +16,12 @@ class Grammaire:
     # utiliser facilement cette dernière
 
     def __init__(self, fichier_regles):
-        self.axiome = None
-        self.int_to_token = {1: "+", 2: "-", 3: "*", 4: "/", 5: ":", 6: "%", 9: "if", 10: "then", 12: "<", 13: ">", 14: "(", 15: ")", 16: "[", 17: "]", 19: "not", 20: "def", 21: "or", 22: "and", 23: "<=", 24: ">=", 25: "==", 26: "!=", 27: "True", 28: "False", 29: "None", 30: "//", 31: ",", 32: "for", 33: "in", 34: "print", 35: "return", 36: "BEGIN", 37: "END", 38: "NEWLINE", 39: "EOF", 40: "identifiant", 41: "char", 42: "number", 43: "=", 44: "else"}
-        self.regles = self.init_regles(fichier_regles)
-        print(self)
+        self.axiome        = None
+        self.int_to_token  = {1: "+", 2: "-", 3: "*", 4: "/", 5: ":", 6: "%", 9: "if", 10: "then", 12: "<", 13: ">", 14: "(", 15: ")", 16: "[", 17: "]", 19: "not", 20: "def", 21: "or", 22: "and", 23: "<=", 24: ">=", 25: "==", 26: "!=", 27: "True", 28: "False", 29: "None", 30: "//", 31: ",", 32: "for", 33: "in", 34: "print", 35: "return", 36: "BEGIN", 37: "END", 38: "NEWLINE", 39: "EOF", 40: "identifiant", 41: "char", 42: "number", 43: "=", 44: "else"}
+        self.regles        = self.init_regles(fichier_regles)
         self.non_terminaux = self.init_non_terminaux()
-        self.premiers = self.calculer_premiers()
-        self.suivants = self.calculer_suivants()
+        self.premiers      = self.calculer_premiers()
+        self.suivants      = self.calculer_suivants()
         
 
 
@@ -208,14 +207,18 @@ class TableAnalyse:
 
 if __name__ == '__main__':
     grammaire_test = Grammaire('Grammaire PCL.txt')
-    #print(f"Les premiers de la grammaire : {grammaire_test.premiers}\nLes suivants de la grammaire : {grammaire_test.suivants}")
+    print(grammaire_test)
+    print("#######################")
+    print(f"Les premiers de la grammaire : {grammaire_test.premiers}\nLes suivants de la grammaire : {grammaire_test.suivants}")
+    print("#######################")
+
     table_analyse = TableAnalyse(grammaire_test)
-    #print(table_analyse)
-    print("####")
+    print(table_analyse)
+    print("#######################")
     # si on a un non terminal E et que l'on lis le caractère correpondant on token 48 alors le token suivant l'unité lexical suivante doit être T  
-    #print(table_analyse.table['<expr>']['40'][0].name)
+    print(table_analyse.table['<expr>']['40'][0].name)
 
     # si on a un non termianl TP et que on lis 42 alors l'unité suivante doit être 42 
-    #print(table_analyse.table['<expr2>']['16'][0].name)
+    print(table_analyse.table['<expr2>']['16'][0].name)
 
 

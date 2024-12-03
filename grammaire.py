@@ -178,7 +178,7 @@ class TableAnalyse:
     def __init__(self, grammaire):
         self.grammaire = grammaire
         self.table = self._construire_table()
-
+        
     def _construire_table(self):
         table = {}
         

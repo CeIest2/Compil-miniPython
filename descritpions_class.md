@@ -24,23 +24,18 @@ Cette classe sert à stocker et manipuler une grammaire formelle. Elle fournit d
 
 ### Méthodes
 
-
-    __init__(self, fichier_regles) : Charge les règles depuis un fichier et initialise les attributs principaux.
-
-
-
-    __str__(self) : Retourne une représentation textuelle de la grammaire, listant chaque non-terminal et ses productions. C'est pour faire print(grammaire)
-
-
-    init_regles(self, fichier_regles) : Lit les règles de grammaire depuis un fichier et les stocke dans le dictionnaire regles.
+    init_regles(self, fichier_regles) 
+Lit les règles de grammaire depuis un fichier et les stocke dans le dictionnaire regles.
 
 
 
-    init_non_terminaux(self) : Identifie et retourne l'ensemble des non-terminaux présents dans la grammaire.
+    init_non_terminaux(self)
+Identifie et retourne l'ensemble des non-terminaux présents dans la grammaire.
 
 
 
-    calculer_premiers(self) : Calcule l'ensemble des premiers pour chaque non-terminal de la grammaire.
+    calculer_premiers(self)
+Calcule l'ensemble des premiers pour chaque non-terminal de la grammaire.
 
 ## Utilisation
 
@@ -52,17 +47,20 @@ Affichez la grammaire :
 
     print(grammaire)
 
-    Les ensembles des premiers sont calculés automatiquement à l'initialisation et accessibles via grammaire.premiers.
+Les ensembles des premiers sont calculés automatiquement à l'initialisation et accessibles via grammaire.premiers.
 
 ## Exemple de fichier de grammaire
 
 Le fichier grammaire.txt doit suivre la syntaxe suivante :
 
-E -> T E'
-E' -> + T E' | ε
-T -> F T'
-T' -> * F T' | ε
-F -> ( E ) | id
+    <E> -> <T> <E'>
+    <E'> -> + <T> <E'> 
+    <E'> -> ^
+    <T> -> <F> <T'>
+    <T'> -> * <F> <T'> 
+    <T'> -> ^
+    <F> -> ( <E> )
+    <F> -> ^
 
 Chaque règle est écrite sous la forme NonTerminal -> production1 | production2 ..., où les productions sont séparées par des espaces.
 

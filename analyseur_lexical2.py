@@ -336,7 +336,7 @@ def analyseur(fichier : str):
 
 if __name__=='__main__':
 
-    liste_token, reussite_compilation = analyseur("_test_2.txt")
+    liste_token, reussite_compilation = analyseur("test.txt")
 
     if reussite_compilation == 1: print("analyse du fichier a réussi")
     elif reussite_compilation == -1 : print("analyse du fichier n'a pas pu aboutir")

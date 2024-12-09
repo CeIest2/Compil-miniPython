@@ -11,8 +11,8 @@ class Liste_token:
         self.nb_char        = 0
         self.dico_number    = {}
         self.nb_number      = 0 
-        self.dict_lexique = {"+" : 1,"-" : 2,"*" : 3,"/" : 4,":" : 5,"%" : 6,"if" : 9,"then" : 10,"<" : 12,">" : 13,"(" : 14,")" : 15,"[" : 16,"]" : 17,"not" : 19,"def" : 20,"or" : 21,"and" : 22,"<=" : 23,">=" : 24,"==" : 25,"!=" : 26,"True" : 27,"False" : 28,"None" : 29,"//" : 30,"," : 31,"for" : 32,"in" : 33,"print" : 34,"return" : 35,"BEGIN" : 36,"END" : 37,"NEWLINE" : 38,"EOF" : 39, "identifiant" : 40, "char" : 41, "number":42, "=": 43, "else": 44}
-
+        self.dict_lexique = {"token_erreur" : -1,"+" : 1,"-" : 2,"*" : 3,"/" : 4,":" : 5,"%" : 6,"if" : 9,"then" : 10,"<" : 12,">" : 13,"(" : 14,")" : 15,"[" : 16,"]" : 17,"not" : 19,"def" : 20,"or" : 21,"and" : 22,"<=" : 23,">=" : 24,"==" : 25,"!=" : 26,"True" : 27,"False" : 28,"None" : 29,"//" : 30,"," : 31,"for" : 32,"in" : 33,"print" : 34,"return" : 35,"BEGIN" : 36,"END" : 37,"NEWLINE" : 38,"EOF" : 39, "identifiant" : 40, "char" : 41, "number":42, "=": 43, "else": 44}
+        self.liste_messages_erreurs = []
 
 
     def add_token_in_liste(self,token, etat):
@@ -48,7 +48,7 @@ class Liste_token:
 
         else:
             self.message_erreur("Caractère non reconnue par le language", token)
-            return -1
+            self.liste_token.append(-1)
 
         return None
     
@@ -152,7 +152,7 @@ class Liste_token:
     def message_erreur(self,type_erreur, token_probleme):
         last_line = self.reconstruction_last_line()
 
-        return f"""File "{os.path.abspath(__file__)}", line {self.liste_token.count(38)+1} \n{last_line}{token_probleme}\n""" + """ """ * len(last_line) + """^^^""" +f"\n{type_erreur}"
+        self.liste_messages_erreurs.append(f"""File "{os.path.abspath(__file__)}", line {self.liste_token.count(38)+1} \n{last_line}{token_probleme}\n""" + """ """ * len(last_line) + """^^^""" +f"\n{type_erreur}")
 
 
 
@@ -203,9 +203,8 @@ def analyseur(fichier : str) -> Liste_token:
                     # Si la pile est vide ou que l'indentation courante n'a pas atteint le niveau attendu
                     if not indentation_courante or indentation_courante[-1] != indentation:
                         erreur = "erreur avec les indentations"
-                        print("erreur dindentation ici")
-                        print(liste_token.message_erreur("Erreur d'indentation", caractere))
-                        return liste_token, -1
+                        liste_token.message_erreur(liste_token.message_erreur("Erreur d'indentation", caractere))
+                        return liste_token
 
             if caractere == " ":
                 caractere = fichier.read(1)
@@ -226,10 +225,6 @@ def analyseur(fichier : str) -> Liste_token:
 
             if caractere in ("1","2","3","4","5","6","7","8","9","0"):
                 # cas de lecteur d'un entier
-                if etat == "debut_ligne":
-                    print(liste_token.message_erreur(" int en début de ligne", caractere))
-                    return liste_token,-1 
-                
                 nombre = caractere
                 etat = "nombre"
                 caractere = fichier.read(1)
@@ -241,8 +236,8 @@ def analyseur(fichier : str) -> Liste_token:
                     etat = "in_line"
                     continue
                 else:
-                    print(liste_token.message_erreur("int overflow", nombre))
-                    return liste_token, -1
+                    liste_token.message_erreur("int overflow", nombre)
+
 
             if re.compile(r'[a-zA-Z_]').match(caractere):
                 etat = "identifiant"
@@ -298,8 +293,7 @@ def analyseur(fichier : str) -> Liste_token:
                 expression = caractere
                 caractere = fichier.read(1)
                 if caractere != "=":
-                    print(liste_token.message_erreur("! n'est pas disponible en mini-python, != et not le sont", caractere))
-                    return liste_token,-1
+                    liste_token.message_erreur("! n'est pas disponible en mini-python, != et not le sont", caractere)
                 else:
                     expression += caractere
                     liste_token.add_token_in_liste(expression, etat)
@@ -319,11 +313,9 @@ def analyseur(fichier : str) -> Liste_token:
                 caractere = fichier.read(1)
                 continue
 
-            
-
-            # si on arrive ici c'est que le caractère n'est pas reconnue, donc il y a erreur 
-            print(liste_token.message_erreur("Caractère non recoonnue par le language", caractere))
-            return liste_token,-1
+    
+            liste_token.message_erreur("Caractère non recoonnue par le language", caractere)
+            caractere = fichier.read(1)
 
     # il faut aussi dépile les dernières imdentations et rajouter le token d end of file
     while indentation_courante:
@@ -331,16 +323,20 @@ def analyseur(fichier : str) -> Liste_token:
         indentation_courante.pop()
     liste_token.add_token_in_liste("EOF", etat)
 
-    return liste_token, 1
+    return liste_token
 
 
 if __name__=='__main__':
 
-    liste_token, reussite_compilation = analyseur("fichier_test/fichier_test_lexeur/mini_test.txt")
+    liste_token = analyseur("fichier_test/fichier_test_lexeur/mini_test.txt")
 
-    if reussite_compilation == 1: print("analyse du fichier a réussi")
-    elif reussite_compilation == -1 : print("analyse du fichier n'a pas pu aboutir")
-    else: print("on est pas sencé avoir se cas là")
+    if liste_token.liste_messages_erreurs == []: print("analyse du fichier a réussi")
+    else : 
+        print("analyse du fichier n'a pas pu aboutir")
+        print("### Erreurs lexicals ###")
+        for message in liste_token.liste_messages_erreurs:
+            print("========================================")
+            print(message)
 
     #print(liste_token.reconstruire_texte())
     #print(liste_token.liste_token)

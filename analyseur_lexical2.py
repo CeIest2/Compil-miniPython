@@ -1,5 +1,6 @@
 import re
 import os
+from colorama import init, Fore, Style
 
 class Liste_token:
 
@@ -11,7 +12,7 @@ class Liste_token:
         self.nb_char        = 0
         self.dico_number    = {}
         self.nb_number      = 0 
-        self.dict_lexique = {"token_erreur" : -1,"+" : 1,"-" : 2,"*" : 3,"/" : 4,":" : 5,"%" : 6,"if" : 9,"then" : 10,"<" : 12,">" : 13,"(" : 14,")" : 15,"[" : 16,"]" : 17,"not" : 19,"def" : 20,"or" : 21,"and" : 22,"<=" : 23,">=" : 24,"==" : 25,"!=" : 26,"True" : 27,"False" : 28,"None" : 29,"//" : 30,"," : 31,"for" : 32,"in" : 33,"print" : 34,"return" : 35,"BEGIN" : 36,"END" : 37,"NEWLINE" : 38,"EOF" : 39, "identifiant" : 40, "char" : 41, "number":42, "=": 43, "else": 44}
+        self.dict_lexique = {"<ERROR>" : -1,"+" : 1,"-" : 2,"*" : 3,"/" : 4,":" : 5,"%" : 6,"if" : 9,"then" : 10,"<" : 12,">" : 13,"(" : 14,")" : 15,"[" : 16,"]" : 17,"not" : 19,"def" : 20,"or" : 21,"and" : 22,"<=" : 23,">=" : 24,"==" : 25,"!=" : 26,"True" : 27,"False" : 28,"None" : 29,"//" : 30,"," : 31,"for" : 32,"in" : 33,"print" : 34,"return" : 35,"BEGIN" : 36,"END" : 37,"NEWLINE" : 38,"EOF" : 39, "identifiant" : 40, "char" : 41, "number":42, "=": 43, "else": 44}
         self.liste_messages_erreurs = []
 
 
@@ -149,11 +150,15 @@ class Liste_token:
         # Vérifier si la valeur est dans l'intervalle
         return INT64_MIN <= valeur <= INT64_MAX
     
-    def message_erreur(self,type_erreur, token_probleme):
+    def message_erreur(self, type_erreur, token_probleme):
         last_line = self.reconstruction_last_line()
-
-        self.liste_messages_erreurs.append(f"""File "{os.path.abspath(__file__)}", line {self.liste_token.count(38)+1} \n{last_line}{token_probleme}\n""" + """ """ * len(last_line) + """^^^""" +f"\n{type_erreur}")
-
+        error_message = (
+            f"{Fore.RED}File \"{os.path.abspath(__file__)}\", line {self.liste_token.count(38)+1}{Style.RESET_ALL}\n"
+            f"{last_line}{Fore.RED}{token_probleme}{Style.RESET_ALL}\n"
+            f"{' ' * len(last_line)}{Fore.GREEN}^^^{Style.RESET_ALL}"
+            f"\n{Fore.YELLOW}{type_erreur}{Style.RESET_ALL}"
+        )
+        self.liste_messages_erreurs.append(error_message)
 
 
 
@@ -204,7 +209,6 @@ def analyseur(fichier : str) -> Liste_token:
                     if not indentation_courante or indentation_courante[-1] != indentation:
                         erreur = "erreur avec les indentations"
                         liste_token.message_erreur(liste_token.message_erreur("Erreur d'indentation", caractere))
-                        return liste_token
 
             if caractere == " ":
                 caractere = fichier.read(1)
@@ -294,6 +298,7 @@ def analyseur(fichier : str) -> Liste_token:
                 caractere = fichier.read(1)
                 if caractere != "=":
                     liste_token.message_erreur("! n'est pas disponible en mini-python, != et not le sont", caractere)
+                    liste_token.add_token_in_liste("<ERROR>", etat)
                 else:
                     expression += caractere
                     liste_token.add_token_in_liste(expression, etat)
@@ -315,6 +320,7 @@ def analyseur(fichier : str) -> Liste_token:
 
     
             liste_token.message_erreur("Caractère non recoonnue par le language", caractere)
+            liste_token.add_token_in_liste("<ERROR>", etat)
             caractere = fichier.read(1)
 
     # il faut aussi dépile les dernières imdentations et rajouter le token d end of file
@@ -338,8 +344,8 @@ if __name__=='__main__':
             print("========================================")
             print(message)
 
-    #print(liste_token.reconstruire_texte())
-    #print(liste_token.liste_token)
-    #print(liste_token.dico_idf)
-    #print(liste_token.dico_char)
-    #print(liste_token.dico_number)
+    print(liste_token.reconstruire_texte())
+    print(liste_token.liste_token)
+    print(liste_token.dico_idf)
+    print(liste_token.dico_char)
+    print(liste_token.dico_number)

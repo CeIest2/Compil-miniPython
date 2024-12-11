@@ -10,6 +10,7 @@ def analyse_syntaxique(liste_token):
     # Pile de parsing
     pile = [grammaire.axiome[0]]
     cara_ind = 0
+    print(liste_token_test.liste_token)
     while pile:
 
         # cas de lecture d'un termianle au début de la pile

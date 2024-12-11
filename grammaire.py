@@ -190,7 +190,10 @@ class TableAnalyse:
         for nt, productions in self.grammaire.regles.items():
             for production in productions:
                 if production[0].name == '^':
+
                     table[nt][production[0].name] = self.grammaire.suivants[nt]
+                    
+                    
                 # Si la production commence par un terminal
                 elif production[0].type_token == "terminal":
                     table[nt][production[0].name] = production

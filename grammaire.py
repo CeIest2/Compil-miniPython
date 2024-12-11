@@ -73,19 +73,20 @@ class Grammaire:
                 parties = ligne.strip().split('->')
                 
                 non_terminal = parties[0].strip()
-                if axiome: 
-                    self.axiome, axiome = non_terminal, False
+
                 
                 production = []
                 for element in parties[1].strip().split():
                     if est_terminal(element):
-                        new_token = Token("terminal", element)
+                        new_token = Token("terminal", element.replace(" ", ""))
                     else:
-                        new_token = Token("non_terminal", element)
+                        new_token = Token("non_terminal", element.replace(" ", ""))
                     production.append(new_token)
                 
                 regles.setdefault(non_terminal, []).append(production)
-        
+                if axiome: 
+                    self.axiome, axiome = [Token("non_terminal", parties[0].replace(" ",""))] ,False
+         
         return regles
 
         
@@ -137,8 +138,6 @@ class Grammaire:
     def calculer_suivants(self):
         suivants = {non_terminal: set() for non_terminal in self.non_terminaux}
 
-        suivants[self.axiome].add('39')  # <EOF> est représenté par '39'
-
         def suivants_de(non_terminal):
             suivants_local = suivants[non_terminal]  # Récupérer les Suivants existants du non-terminal
 
@@ -184,6 +183,7 @@ class TableAnalyse:
         
         # Initialiser la table
         for nt in self.grammaire.non_terminaux:
+            
             table[nt] = {}
         
         # Remplir la table

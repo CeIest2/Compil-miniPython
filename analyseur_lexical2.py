@@ -174,6 +174,8 @@ def analyseur(fichier : str) -> Liste_token:
     erreur = None
     indentation_courante = [0]
 
+    liste_token.add_token_in_liste("NEWLINE", etat)
+
     with open(fichier, 'r') as fichier:
         caractere = fichier.read(1)  
         while True :  # en cas d'apparition d'une erreur, on stop l'analyse

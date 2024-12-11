@@ -1,3 +1,4 @@
 test*
 __pycache__
-ast_tree
+ast_tree*
+*cpython*

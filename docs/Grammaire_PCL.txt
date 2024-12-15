@@ -6,7 +6,9 @@
 <start_stmt> -> <stmt> <start_stmt_2>
 <start_stmt_2> -> <stmt> <start_stmt_2>
 <start_stmt_2> -> ^
-<def> -> 20 40 14 40 <parameters> 15 5 <suite>
+<def> -> 20 40 14 <first_para> 15 5 <suite>
+<first_para> -> 40 <parameters>
+<first_para> -> ^
 <parameters> -> 31 40 <parameters>
 <parameters> -> ^
 <suite> -> <simple_stmt> 38

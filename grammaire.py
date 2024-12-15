@@ -4,10 +4,18 @@ class Token:
 
     def __init__(self,type_token, identificateur):
         self.type_token     = type_token              # peut être terminal ou non terminal
-        self.name           = identificateur    # son nom si c'est un non_terminal et son num si c'est un terminal 
+        self.name           = self._crea_name(identificateur)    # son nom si c'est un non_terminal et son num si c'est un terminal 
         self.representation = None    # utiliser lors du print pour pouvoir débuguer plus facilement
         self.suivant        = None
 
+    def _crea_name(self, identificateur):
+        if self.type_token == "non_terminal":
+            return identificateur
+        else:
+            if identificateur.isdigit():
+                return int(identificateur)
+            else:
+                return identificateur
             
 
 class Grammaire:

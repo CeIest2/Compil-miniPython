@@ -1,2 +1,3 @@
 def calculateur():
     return 1
+a=2

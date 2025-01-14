@@ -6,9 +6,9 @@ def analyse_syntaxique(liste_token):
     grammaire = Grammaire("docs/Grammaire_PCL.txt")
 
     table_analyse = TableAnalyse(grammaire)
-    liste_token_test = analex.analyseur("fichier_test/fichier_test_lexeur/mini_test.txt")
     # Pile de parsing
     pile = [grammaire.axiome[0]]
+    liste_token_test = liste_token
     
     cara_ind = 0
     liste_token_a_afficher = [[liste_token_test.liste_token[i], grammaire.int_to_token[liste_token_test.liste_token[i]]] 
@@ -34,7 +34,7 @@ def analyse_syntaxique(liste_token):
                     print("Erreur de syntaxe ")
                     print(f"ce qu'on la grammaire coudrais : {pile[-1].name} et ce que l'on a : {cara}")
                     print(f"nb token qui a chier : {cara_ind}")
-                    print(grammaire.suivants)
+                    print(f"""premiers {table_analyse.grammaire.premiers["<expr2>"]}""")
                     break
             else:
                 if pile[-1].name == cara[0]:
@@ -64,10 +64,21 @@ def analyse_syntaxique(liste_token):
             
             try:
                 production = table_analyse.table[pile[-1].name][cara_suivant]
-
+                if pile[-1].name == "<expr2>":
+                    print(f"production {production[0].name}")
             except :
-                print(table_analyse.table[pile[-1].name])
-                print(pile[-1].name)
+                if cara_suivant == 39:
+
+                    print("affection d'une variable qui n'est pas utiliser à la dernière ligne")
+                    print(f" suivants de {pile[-1].name} {table_analyse.grammaire.suivants[pile[-1].name] }")
+                    print(f" suivants de {pile[-2].name} {table_analyse.grammaire.suivants[pile[-1].name] }")
+                    print(f" premiers de {pile[-1].name} {table_analyse.grammaire.premiers[pile[-1].name] }")
+                    print(f" premiers de {pile[-2].name} {table_analyse.grammaire.premiers[pile[-1].name] }")
+                else:
+                    print(f" caractère que l'on a {liste_token_test.liste_token[cara_ind]}")
+                    print(f" caractère que le compilateur aurait aimer avoir {pile[-1].name}")
+                    print(f" table analyse {table_analyse.table[pile[-1].name]}")
+                    
                 break
 
             if production:
@@ -79,13 +90,14 @@ def analyse_syntaxique(liste_token):
                 print("Erreur de syntaxe 57")
                 break
 
-        
-
+    print(cara_ind)
+    print(liste_token.liste_token[cara_ind:])
     return -1,-1
 
 
 
 
 if __name__ == '__main__':
-    liste_token = analex.analyseur("fichier_test/fichier_test_lexeur/mini_test.txt")
+    liste_token = analex.analyseur("fichier_test/fichier_test_lexeur/_test.txt")
+    print(liste_token.liste_token)
     arbre_derivation, message_erreur = analyse_syntaxique(liste_token)

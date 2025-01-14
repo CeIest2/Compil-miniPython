@@ -17,6 +17,9 @@ class Token:
             else:
                 return identificateur
             
+    def __str__(self):
+        return  f"{self.name}"
+            
 
 class Grammaire:
 
@@ -114,70 +117,88 @@ class Grammaire:
         premiers = {non_terminal: set() for non_terminal in self.non_terminaux}
 
         def premiers_de(non_terminal, regles):
-            premiers_local = set()  # Utiliser un set pour éviter les doublons
-
-            for regle in regles:
-                for element in regle:
-                    if element.type_token == "terminal":
-                        # Ajouter directement le terminal
-                        premiers_local.add(element.name)
-                        break
-                    elif element.type_token == "non_terminal":
-                        if element.name == '^':
-                            premiers_local.add('^')
-                            break
-                        premiers_local.update(premiers_de(element.name, self.regles[element.name]))
-
-                        # Si le non-terminal ne produit pas vide, arrêter
-                        if '^' in premiers_local:
-                            premiers_local.remove('^')
-                        else:
-                            break
-                else:
-                    premiers_local.add('^')
-            return premiers_local
-                        
-        for nt, regles in self.regles.items():
-            premiers[nt] = premiers_de(nt,regles)
-            if "^" in premiers[nt]:
-                premiers[nt].remove("^")
-        return premiers
+            if not premiers[non_terminal]:  # Si pas encore calculé
+                for regle in regles:
+                    premiers_regle = set()
+                    tous_epsilon = True
                     
+                    for element in regle:
+                        if element.type_token == "terminal":
+                            premiers_regle.add(element.name)
+                            tous_epsilon = False
+                            break
+                        elif element.type_token == "non_terminal":
+                            if element.name == '^':
+                                premiers_regle.add('^')
+                                break
+                            # Récursion pour calculer les premiers du non-terminal
+                            premiers_element = premiers_de(element.name, self.regles[element.name])
+                            premiers_regle.update(premiers_element - {'^'})
+                            if '^' not in premiers_element:
+                                tous_epsilon = False
+                                break
+                    
+                    if tous_epsilon:
+                        premiers_regle.add('^')
+                    
+                    premiers[non_terminal].update(premiers_regle)
+            
+            return premiers[non_terminal]
+
+        # Calculer les premiers pour tous les non-terminaux
+        for nt, regles in self.regles.items():
+            premiers_de(nt, regles)
+        
+        return premiers
+
     def calculer_suivants(self):
         suivants = {non_terminal: set() for non_terminal in self.non_terminaux}
-
+        
+        # Initialiser le suivant de l'axiome avec EOF
+        suivants[self.axiome[0].name].add('39')  # 39 est EOF dans votre dictionnaire int_to_token
+        
         def suivants_de(non_terminal):
-            suivants_local = suivants[non_terminal]  # Récupérer les Suivants existants du non-terminal
-
             for nt, regles in self.regles.items():
                 for regle in regles:
                     for i, element in enumerate(regle):
                         if element.type_token == "non_terminal" and element.name == non_terminal:
-                            # Regarder les éléments après `element` dans la règle
-                            for suivant in regle[i + 1:]:
-                                if suivant.type_token == "terminal":
-                                    # Ajouter directement le terminal
-                                    suivants_local.add(suivant.name)
-                                    break
-                                elif suivant.type_token == "non_terminal":
-                                    # Ajouter Premiers(suivant), sans '^'
-                                    suivants_local.update(self.premiers[suivant.name] - {'^'})
-                                    if '^' not in self.premiers[suivant.name]:
-                                        break
+                            reste_regle = regle[i + 1:]
+                            
+                            if not reste_regle:  # Si c'est le dernier élément
+                                suivants[non_terminal].update(suivants[nt])
                             else:
-                                # Si on atteint la fin de la règle, ajouter Suivants(nt)
-                                suivants_local.update(suivants[nt])
-            return suivants_local
+                                premiers_reste = set()
+                                tous_epsilon = True
+                                
+                                for suivant in reste_regle:
+                                    if suivant.type_token == "terminal":
+                                        premiers_reste.add(suivant.name)
+                                        tous_epsilon = False
+                                        break
+                                    elif suivant.type_token == "non_terminal":
+                                        premiers_suivant = self.premiers[suivant.name]
+                                        premiers_reste.update(premiers_suivant - {'^'})
+                                        if '^' not in premiers_suivant:
+                                            tous_epsilon = False
+                                            break
+                                
+                                suivants[non_terminal].update(premiers_reste)
+                                if tous_epsilon:
+                                    suivants[non_terminal].update(suivants[nt])
+            
+            return suivants[non_terminal]
 
-        # Propagation des Suivants jusqu'à stabilisation
+        # Propager les suivants jusqu'à stabilisation
         changement = True
         while changement:
-            changement = False
+            ancien_suivants = {nt: suivants[nt].copy() for nt in self.non_terminaux}
+            
             for nt in self.non_terminaux:
-                taille_avant = len(suivants[nt])
-                suivants[nt] = suivants_de(nt)
-                if len(suivants[nt]) > taille_avant:
-                    changement = True
+                suivants_de(nt)
+            
+            # Vérifier s'il y a eu des changements
+            changement = any(suivants[nt] != ancien_suivants[nt] for nt in self.non_terminaux)
+        
         return suivants
         
 
@@ -188,48 +209,68 @@ class TableAnalyse:
         
     def _construire_table(self):
         table = {}
+        conflits = []
         
         # Initialiser la table
         for nt in self.grammaire.non_terminaux:
-            
             table[nt] = {}
         
         # Remplir la table
         for nt, productions in self.grammaire.regles.items():
             for production in productions:
-                if production[0].name == '^':
+                if production[0].name == '^':  # Production vide (ε)
                     for suivant in self.grammaire.suivants[nt]:
-                        
-                        table[nt][suivant] = production                    
-
-                # Si la production commence par un terminal
+                        if suivant in table[nt]:
+                            # Vérifier si un conflit existe
+                            conflit_regle = table[nt][suivant]
+                            if conflit_regle[0].name != '^':  # Préférer les règles non vides
+                                continue  # Ne pas insérer cette règle
+                        table[nt][suivant] = production
+                
                 elif production[0].type_token == "terminal":
-                    table[nt][production[0].name] = production
-                    
-                # Si la production commence par un non-terminal
+                    if production[0].name in table[nt]:
+                        conflit_regle = table[nt][production[0].name]
+                        if conflit_regle[0].name == '^':  # Règle vide déjà présente
+                            # Remplacez la règle vide par la nouvelle règle
+                            table[nt][production[0].name] = production
+                        else:
+                            conflits.append((nt, production[0].name, table[nt][production[0].name], production))
+                    else:
+                        table[nt][production[0].name] = production
+                
                 elif production[0].type_token == "non_terminal":
-
                     for terminal in self.grammaire.premiers[production[0].name]:
-                        table[nt][terminal] = production
-            
+                        if terminal in table[nt]:
+                            conflit_regle = table[nt][terminal]
+                            if conflit_regle[0].name == '^':  # Règle vide déjà présente
+                                # Remplacez la règle vide par la nouvelle règle
+                                table[nt][terminal] = production
+                            else:
+                                conflits.append((nt, terminal, table[nt][terminal], production))
+                        else:
+                            table[nt][terminal] = production
+        
+        if conflits:
+            print("Conflits détectés dans la table d'analyse (les règles vides ont été traitées) :")
+            for nt, terminal, prod1, prod2 in conflits:
+                print(f"Conflit pour {nt} avec le terminal {terminal}:")
+                print(f"  Production 1: {[token.name for token in prod1]}")
+                print(f"  Production 2: {[token.name for token in prod2]}")
+                
         return table
 
 
 
 if __name__ == '__main__':
-    grammaire_test = Grammaire('Grammaire PCL.txt')
+    grammaire_test = Grammaire('docs/Grammaire_PCL.txt')
     print(grammaire_test)
     print("#######################")
     print(f"Les premiers de la grammaire : {grammaire_test.premiers}\nLes suivants de la grammaire : {grammaire_test.suivants}")
     print("#######################")
 
     table_analyse = TableAnalyse(grammaire_test)
-    print(table_analyse)
-    print("#######################")
-    # si on a un non terminal E et que l'on lis le caractère correpondant on token 48 alors le token suivant l'unité lexical suivante doit être T  
-    print(table_analyse.table['<expr>']['40'][0].name)
 
-    # si on a un non termianl TP et que on lis 42 alors l'unité suivante doit être 42 
-    print(table_analyse.table['<expr2>']['16'][0].name)
+
+
 
 

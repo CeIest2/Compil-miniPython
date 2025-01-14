@@ -6,14 +6,6 @@ def test1():
         print("positif")
     else:
         print("négatif")
-
-# Test 2: Identifiants variés
-variable = 0
-_variable = 1
-variable_1 = 2
-Variable_Test = 3
-_2variable = 4
-
 # Test 3: Nombres et opérateurs
 def calculateur():
     a = 0
@@ -22,11 +14,6 @@ def calculateur():
     resultat = ((a + b) * c) // 2
     test = a <= b and b >= c or not c == 0
     return resultat
-
-# Test 4: Chaînes de caractères avec échappement
-message1 = "Test des \"guillemets\""
-message2 = "Ligne 1\nLigne 2"
-
 # Test 5: Boucle for et mots-clés
 def test_boucle():
     nombres = [1, 2, 3]
@@ -36,7 +23,6 @@ def test_boucle():
         else:
             return None
     return True
-
 # Test 6: Indentations multiples et opérateurs
 def indentation_complexe():
     x = 1
@@ -50,7 +36,6 @@ def indentation_complexe():
             print("else niveau 2")
     else:
         print("else niveau 1")
-
 # Test 7: Tous les opérateurs
 def test_operateurs():
     a = 5
@@ -70,13 +55,11 @@ def test_operateurs():
     b = not a    # négation
     b = a and b  # et logique
     b = a or b   # ou logique
-
 # Test 8: Mix de tout
 def programme_complet():
     # Initialisation
     _compteur = 0
     resultat123 = None
-    
     if True and not False:
         texte = "Test\n\"complexe\""
         for i in [1, 2, 3]:
@@ -85,5 +68,13 @@ def programme_complet():
                 print(i)
             else:
                 return None
-    
     return True
+# Test 2: Identifiants variés
+variable = 0
+_variable = 1
+variable_1 = 2
+Variable_Test = 3
+_2variable = 4
+# Test 4: Chaînes de caractères avec échappement
+message1 = "Test des \"guillemets\""
+message2 = "Ligne 1\nLigne 2"

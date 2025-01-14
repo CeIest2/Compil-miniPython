@@ -1,3 +1,14 @@
-def calculateur():
-    return 1
-a=2
+def motif_complexe():
+    nombres = [1, 2, 3, 4]
+    for i in nombres:
+        for j in nombres:
+            if i != j and i < j:
+                if i * j > 5:
+                    print(i + j)
+                else:
+                    print(i * j)
+def test_chaines():
+    msg1 = "Ligne 1\n\n\"Citation\"\nLigne 4"
+    msg2 = "Test des \" guillemets"
+    msg3 = "Test\nMulti\nLigne"
+    return msg1

@@ -12,11 +12,15 @@ class Liste_token:
         self.nb_char        = 0
         self.dico_number    = {}
         self.nb_number      = 0 
-        self.dict_lexique = {"<ERROR>" : -1,"+" : 1,"-" : 2,"*" : 3,"/" : 4,":" : 5,"%" : 6,"if" : 9,"then" : 10,"<" : 12,">" : 13,
-                             "(" : 14,")" : 15,"[" : 16,"]" : 17,"not" : 19,"def" : 20,"or" : 21,"and" : 22,"<=" : 23,">=" : 24,
-                             "==" : 25,"!=" : 26,"True" : 27,"False" : 28,"None" : 29,"//" : 30,"," : 31,"for" : 32,"in" : 33,
+        self.dict_lexique = {"<ERROR>" : -1,"+" : 1,"-" : 2,"*" : 3,"/" : 4,":" : 5,"%" : 6,"if" : 9,
+                             "then" : 10,"<" : 12,">" : 13,
+                             "(" : 14,")" : 15,"[" : 16,"]" : 17,"not" : 19,"def" : 20,"or" : 21,
+                             "and" : 22,"<=" : 23,">=" : 24,
+                             "==" : 25,"!=" : 26,"True" : 27,"False" : 28,"None" : 29,"//" : 30,
+                             "," : 31,"for" : 32,"in" : 33,
                              "print" : 34,"return" : 35,"BEGIN" : 36,"END" : 37, "NEWLINE" : 38,
-                             "EOF" : 39, "identifiant" : 40, "char" : 41, "number":42, "=": 43, "else": 44}
+                             "EOF" : 39, "identifiant" : 40, "char" : 41, "number":42, "=": 43,
+                             "else": 44}
         self.liste_messages_erreurs = []
 
 
@@ -226,7 +230,8 @@ def analyseur(fichier : str) -> Liste_token:
                 while caractere != "\n":
                     caractere = fichier.read(1)
                     continue
-                liste_token.add_token_in_liste("NEWLINE", etat)
+                if liste_token.liste_token[-1] != 38 and liste_token.liste_token[-1] != 36 and liste_token.liste_token[-1] != 37:
+                    liste_token.add_token_in_liste("NEWLINE", etat)
                 etat = "debut_ligne"
                 caractere = fichier.read(1)
                 continue
@@ -320,6 +325,17 @@ def analyseur(fichier : str) -> Liste_token:
 
             if caractere in liste_token.dict_lexique:
                 etat = "cara_unique"
+                if caractere == "/":
+                    caractere = fichier.read(1)
+                    if caractere == "/":
+                        liste_token.add_token_in_liste("//", etat)
+                        caractere = fichier.read(1)
+                        continue
+                    else:
+                        liste_token.add_token_in_liste("/", etat)
+                        print(caractere)
+                        etat = "in_line"
+                        continue
                 liste_token.add_token_in_liste(caractere, etat)
                 caractere = fichier.read(1)
                 continue
@@ -328,7 +344,8 @@ def analyseur(fichier : str) -> Liste_token:
             liste_token.message_erreur("Caractère non recoonnue par le language", caractere)
             liste_token.add_token_in_liste("<ERROR>", etat)
             caractere = fichier.read(1)
-
+    if liste_token.liste_token[-1] != 36:
+        liste_token.add_token_in_liste("NEWLINE", etat)
     # il faut aussi dépile les dernières imdentations et rajouter le token d end of file
     while len(indentation_courante)>1:
         liste_token.add_token_in_liste("END", etat)

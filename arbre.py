@@ -17,6 +17,10 @@ class ASTNode:
             child.parent = self
         self.nb_children += 1
 
+    def const():
+        return 
+
+
 
 def const_test_arbre():
     root = ASTNode('root')

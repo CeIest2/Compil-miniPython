@@ -58,10 +58,14 @@ def analyse_syntaxique(liste_token):
                 pile_noeuds.pop()
                 if production[0].name != "^":
                     for symbol in reversed(production):
-                        new_node = ASTNode(symbol.name)
-                        noeud_parent.add_child(new_node)
-                        pile.append(symbol)
-                        pile_noeuds.append(new_node)
+                        if symbol.type_token == "non_terminal":
+                            new_node = ASTNode(symbol.name)
+                            noeud_parent.add_child(new_node)
+                            pile.append(symbol)
+                            pile_noeuds.append(new_node)
+                        else:  # terminal
+                            pile.append(symbol)
+                            pile_noeuds.append(noeud_parent)
                 else:
                     # Cas où la production contient uniquement "^" (epsilon)
                     noeud_parent.add_child(ASTNode("^"))

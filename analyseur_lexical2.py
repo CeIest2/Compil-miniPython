@@ -343,7 +343,11 @@ def analyseur(fichier : str) -> Liste_token:
     
             liste_token.message_erreur("Caractère non recoonnue par le language", caractere)
             liste_token.add_token_in_liste("<ERROR>", etat)
-            caractere = fichier.read(1)
+            try:
+                caractere = fichier.read(1)
+            except:
+                # en cas de fin de fichier on peut soritr de la boucle
+                break
     if liste_token.liste_token[-1] != 36:
         liste_token.add_token_in_liste("NEWLINE", etat)
     # il faut aussi dépile les dernières imdentations et rajouter le token d end of file

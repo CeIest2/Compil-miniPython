@@ -98,6 +98,6 @@ def analyse_syntaxique(liste_token):
 
 
 if __name__ == '__main__':
-    liste_token = analex.analyseur("fichier_test/fichier_test_lexeur/_test.txt")
+    liste_token = analex.analyseur("fichier_test/fichier_test_lexeur/mini_test.txt")
     print(liste_token.liste_token)
     arbre_derivation, message_erreur = analyse_syntaxique(liste_token)

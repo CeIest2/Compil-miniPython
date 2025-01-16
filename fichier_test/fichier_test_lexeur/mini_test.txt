@@ -1,5 +1,8 @@
-def test_chaines():
-    msg1 = "Ligne 1\n\n\"Citation\"\nLigne 4"
-    msg2 = "Test des \" guillemets"
-    msg3 = "Test\nMulti\nLigne"
-    return msg1
+# Test 1: Commentaires et indentation basique
+def test1():
+    # Ceci est un commentaire
+    x = 42  # Commentaire en fin de ligne
+    if x > 0:
+        print("positif")
+    else:
+        print("négatif")

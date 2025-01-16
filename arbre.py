@@ -66,8 +66,7 @@ def visualize_ast(root):
     
     # Construire le graphe
     add_nodes_edges(root)
-    dot.render('arbre_syntaxique', format='png', cleanup=True)  # Générer le fichier PNG
-    dot.view()  # Ouvrir l'image générée
+    dot.render('Image_A_DERIVATION', format='png', cleanup=True)  # Générer le fichier PNG
 
 if __name__ == '__main__':
     # Utilisation

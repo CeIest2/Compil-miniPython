@@ -9,13 +9,14 @@ class ASTNode:
 
     def add_child(self, child, index=None):
         """Ajouter un fils à un index spécifique ou à la fin"""
-        if index is not None:
-            self.children.insert(index, child)
-            child.parent = self
-        else:
-            self.children.append(child)
-            child.parent = self
-        self.nb_children += 1
+        if child is not None :
+            if index is not None:
+                self.children.insert(index, child)
+                child.parent = self
+            else:
+                self.children.append(child)
+                child.parent = self
+            self.nb_children += 1
 
 
 def const_test_arbre():

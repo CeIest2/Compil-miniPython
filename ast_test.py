@@ -1,7 +1,7 @@
 from grammaire import *
 import analyseur_lexical2 as analex
 from arbre import ASTNode, visualize_ast
-from ast import simplify_tree
+from ast_1 import simplify_tree
 
 def analyse_syntaxique(liste_token):
     grammaire = Grammaire("docs/Grammaire_PCL.txt")
@@ -83,7 +83,9 @@ if __name__ == '__main__':
     liste_token = analex.analyseur("fichier_test/fichier_test_lexeur/mini_test.txt")
     print(liste_token.liste_token)
     arbre_derivation, message_erreur = analyse_syntaxique(liste_token)
-    # ast=simplify_tree(arbre_derivation)
+    ast=simplify_tree(arbre_derivation)
 
-    # if arbre_derivation:
-    #     visualize_ast(arbre_derivation)
+    if arbre_derivation:
+        visualize_ast(arbre_derivation)
+
+    visualize_ast(ast)

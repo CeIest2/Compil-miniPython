@@ -73,6 +73,19 @@ def simplify_rules(parse_tree):
             ast= ASTNode(35)
             ast.add_child(expr)
             return ast
+        
+        elif parse_tree.children[0].value == 40 and len(parse_tree.children) > 1:
+            if parse_tree.children[1].value == "<suite_ident_simple_stmt>":
+                identifier = parse_tree.children[0]  # Le nœud contenant l'identifiant
+                affect_suite = parse_tree.children[1] #Le noeud contenant la suite de l'affectation
+                if affect_suite.children and affect_suite.children[0].value == 43:
+                    expression = simplify_tree(affect_suite.children[1])  # Simplifie l'expression d'affectation
+                    ast = ASTNode("Assignment")
+                    ast.add_child(ASTNode("Identifier", identifier.value))  # Ajouter le nom de la variable
+                    ast.add_child(expression)  # Ajouter l'expression assignée
+                    return ast
+
+        
         else:
             return simplify_tree(parse_tree.children[0])  # D'autres cas
 

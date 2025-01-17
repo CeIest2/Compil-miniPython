@@ -1,6 +1,8 @@
-def calculateur():
-    b = 123
-    c = 9999ù
-    resultat = ((0 + b) * c) // 2
-    test = 0 <= b and b >= c or not c == 0£
-    return resultat
+# Test 1: Commentaires et indentation basique
+def test1():
+    # Ceci est un commentaire
+    x = 42  # Commentaire en fin de ligne
+    if x > 0:
+        print("positif")
+    else:
+        print("négatif")

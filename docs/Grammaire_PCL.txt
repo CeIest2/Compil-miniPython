@@ -4,14 +4,17 @@
 <start_func> -> <def> <start_func>
 <start_func> -> ^
 <start_stmt> -> <stmt> <start_stmt_2>
+<start_stmt> -> ^
 <start_stmt_2> -> <stmt> <start_stmt_2>
 <start_stmt_2> -> ^
-<def> -> 20 40 14 40 <parameters> 15 5 <suite>
+<def> -> 20 40 14 <first_para> 15 5 <suite>
+<first_para> -> 40 <parameters>
+<first_para> -> ^
 <parameters> -> 31 40 <parameters>
 <parameters> -> ^
 <suite> -> <simple_stmt> 38
 <suite> -> 38 36 <start_stmt> 37
-<simple_stmt> -> 35 <expr>
+<simple_stmt> -> 35 <expr> 
 <simple_stmt> -> 40 <suite_ident_simple_stmt>
 <simple_stmt> -> <const> <expr2> <suite_expr>
 <simple_stmt> -> 2 <expr> <expr2> <suite_expr>
@@ -31,7 +34,7 @@
 <suite_if> -> 44 5 <suite>
 <suite_if> -> ^
 <expr> -> <const> <expr2>
-<expr> -> 40 <suite_ident_expr>
+<expr> -> 40 <expr2>
 <expr> -> 2 <expr> <expr2>
 <expr> -> 19 <expr> <expr2>
 <expr> -> 16 <expr> <depth> 17 <expr2>

@@ -17,8 +17,7 @@ class ASTNode:
             child.parent = self
         self.nb_children += 1
 
-    def const():
-        return 
+    
 
 
 

@@ -67,6 +67,9 @@ def simplify_rules(parse_tree):
         ast= ASTNode("<const>")
         ast.add_child(ASTNode(parse_tree.children[0].value))
 
+    if value == "<depth>":
+        return simplify_depth(parse_tree)
+
     if value == "<simple_stmt>":
         if parse_tree.children[0].value == 35:  # RETURN
             expr = simplify_tree(parse_tree.children[1])
@@ -167,3 +170,25 @@ def simplify_tree(parse_tree):
 
     return simplified_node
 
+
+def simplify_depth(parse_tree):
+
+    expressions = []
+
+    #On traite la première expression après la virgule
+    current_expr = parse_tree.children[1]
+    expressions.append(simplify_tree(current_expr))
+
+    #on traite les expressions qui suivent
+
+    current_depth = parse_tree.children[2]
+    while current_depth.value == "<depth>":
+        expressions.append(simplify_tree(current_depth.children[1]))
+        current_depth = current_depth.children[2]
+
+    #on construit le noeud après avoir recup toute les expresssiosn dans expressions
+    depth_node = ASTNode("List")
+    for i in  expressions:
+        depth_node.add_child(i)
+    
+    return depth_node

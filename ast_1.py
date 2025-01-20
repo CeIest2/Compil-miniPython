@@ -39,7 +39,18 @@ def simplify_rules(parse_tree):
     elif value == "<suite>":
         ast = Arbre("<body>")
         for child in parse_tree.children:
-            ast.add_child(simplify_tree(child))
+            print ('body ; ', child.value)
+            if child.value != '<start_stmt>':
+                ast.add_child(simplify_tree(child))
+            else :
+                if parse_tree.children[0].value == '^':
+                    return None
+                else:
+                    L=simplify_statements(parse_tree,[])
+                    L.reverse()
+                    for child in L:
+                        ast.add_child(child)
+                    return ast 
         return ast
     
     elif value =="<parameters>":
@@ -50,37 +61,51 @@ def simplify_rules(parse_tree):
             ast.add_child(child)
         return ast
 
-    elif value == "<start_stmt>":
-        if parse_tree.children[0].value == '^':
-            return None
-        else:
-            ast= Arbre("<statements>")
-            L=simplify_statements(parse_tree,[])
-            L.reverse()
-            for child in L:
-                ast.add_child(child)
-            return ast    
+    # elif value == "<start_stmt>":
+    #     if parse_tree.children[0].value == '^':
+    #         return None
+    #     else:
+    #         ast= Arbre("<statements>")
+    #         L=simplify_statements(parse_tree,[])
+    #         L.reverse()
+    #         for child in L:
+    #             ast.add_child(child)
+    #         return ast    
 
     elif value == "<stmt>":
         for child in parse_tree.children:
+            print('child_stmt : ',child.value)
             if child.value == "9":               # if
-                condition = simplify_tree(parse_tree.children[1])  # Condition
-                if_body = simplify_tree(parse_tree.children[-2])  # Then
-                else_branch = simplify_tree(parse_tree.children[-1]) if len(parse_tree.children) > 4 else None  # Else
-                ast= Arbre(9)
+                condition = simplify_tree(parse_tree.children[2])  # Condition
+                if_body = simplify_tree(parse_tree.children[1])  # Then
+                else_branch = simplify_tree(parse_tree.children[0]) if len(parse_tree.children) > 4 else None  # Else
+                ast= Arbre(child.value)
                 ast.add_child(condition)
                 ast.add_child(if_body)
                 ast.add_child(else_branch)
                 return ast
             elif child.value == "<simple_stmt>":
                 return simplify_tree(child)
-            else:
-                return simplify_tree(parse_tree.children[0])  # Simple statement
+            # else: #for
+            #     return simplify_tree(parse_tree.children[0])  # Simple statement
+            # # pas de while ??
+        return None
+    
+    elif value == "<suite_if>":
+        for child in parse_tree.children:
+            print('suit if : ',child.value)
+            if child.value == "^":
+                return None
+            elif child.value == "44":
+                suite_if = Arbre("44")
+            elif child.value == "<suite>":
+                suite = simplify_tree(child)
+        suite_if.add_child(suite)
+        return suite_if
 
     elif value == "<expr>":
-        print (parse_tree.children)
-        for child in parse_tree.children:
-            print (child.value)
+        # for child in parse_tree.children:
+        #     print (child.value)
         if parse_tree.children[1].value=='<const>':
             const = parse_tree.children[1].children[0]
             if const.value =="42":
@@ -100,7 +125,8 @@ def simplify_rules(parse_tree):
                     ast.add_child(child)
                 return ast
             
-        if parse_tree.children[1].value=='40':
+        elif parse_tree.children[1].value=='40':
+            child=parse_tree.children[1]
             left = Arbre(child.num_identifiant)  # Gauche
             if parse_tree.children[0].children[0].value == '^':  
                 return left

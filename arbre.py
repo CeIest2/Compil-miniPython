@@ -1,11 +1,14 @@
 from graphviz import Digraph
+import random
 
-class ASTNode:
+
+class Arbre:
     def __init__(self, value):
         self.value = str(value)  # Convertir en chaîne
         self.children = []  # Liste ordonnée des fils
         self.nb_children = 0
         self.parent = None  # Référence vers le parent
+        self.num_identifiant = -1
 
     def add_child(self, child, index=None):
         """Ajouter un fils à un index spécifique ou à la fin"""
@@ -17,20 +20,7 @@ class ASTNode:
             child.parent = self
         self.nb_children += 1
 
-    
 
-
-
-def const_test_arbre():
-    root = ASTNode('root')
-    child1 = ASTNode('child1')
-    child2 = ASTNode('child2')
-    child3 = ASTNode('child3')
-    root.add_child(child1)
-    root.add_child(child2)
-    root.add_child(child3)
-    root.children[1].add_child(ASTNode('child4'))
-    return root
 
 
 def visualize_ast(root):
@@ -68,7 +58,9 @@ def visualize_ast(root):
     
     # Construire le graphe
     add_nodes_edges(root)
-    dot.render('Image_A_DERIVATION', format='png', cleanup=True)  # Générer le fichier PNG
+    a = random.randint(0,100)
+    print(a)
+    dot.render(f'Image_A_{a}', format='png', cleanup=True)  # Générer le fichier PNG
 
 if __name__ == '__main__':
     # Utilisation

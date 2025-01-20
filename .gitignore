@@ -2,3 +2,4 @@ test*
 __pycache__
 ast_tree*
 *.cpy
+Image_A*

@@ -6,9 +6,9 @@ def analyseur(code_entré):
         cette fonction a pour bute de créer l'arbre syntaxique et d'afficher ce dernier 
     """
 
-    liste_token, reussite_compilation = analex.analyseur(code_entré)
+    liste_token, analyse_lexical = analex.analyseur(code_entré)
 
-    if  not reussite_compilation:
+    if  not analyse_lexical:
         print("dommage ça compile pas")
         exit()
 
@@ -22,3 +22,6 @@ def analyseur(code_entré):
 
     
 
+if __name__ == "__main__":
+    code_entré = ".fichier_test/fichier_test_lexeur/mini_test.txt"
+    analyseur(code_entré)

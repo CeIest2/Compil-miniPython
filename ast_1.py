@@ -39,7 +39,7 @@ def simplify_rules(parse_tree):
     elif value == "<suite>":
         ast = Arbre("<body>")
         for child in parse_tree.children:
-            print ('body ; ', child.value)
+            # print ('body ; ', child.value)
             if child.value != '<start_stmt>':
                 ast.add_child(simplify_tree(child))
             else :
@@ -75,6 +75,7 @@ def simplify_rules(parse_tree):
     elif value == "<stmt>":
         for child in parse_tree.children:
             print('child_stmt : ',child.value)
+
             if child.value == "9":               # if
                 condition = simplify_tree(parse_tree.children[2])  # Condition
                 if_body = simplify_tree(parse_tree.children[1])  # Then
@@ -84,11 +85,21 @@ def simplify_rules(parse_tree):
                 ast.add_child(if_body)
                 ast.add_child(else_branch)
                 return ast
+            
             elif child.value == "<simple_stmt>":
                 return simplify_tree(child)
-            # else: #for
-            #     return simplify_tree(parse_tree.children[0])  # Simple statement
-            # # pas de while ??
+            
+            elif child.value == "32":                         #for
+                condition = Arbre("33")
+                idf = parse_tree.children[3]
+                condition.add_child(Arbre(idf.num_identifiant))
+                condition.add_child(simplify_tree(parse_tree.children[1]))
+                body = simplify_tree(parse_tree.children[0])
+                ast = Arbre("32")
+                ast.add_child(condition)
+                ast.add_child(body)
+                return ast
+            # pas de while ??
         return None
     
     elif value == "<suite_if>":

@@ -55,9 +55,10 @@ def simplify_rules(parse_tree):
             return None
         else:
             ast= Arbre("<statements>")
-            for child in parse_tree.children:
-                if child.value == "<stmt>":
-                    ast.add_child(simplify_tree(child))
+            L=simplify_statements(parse_tree,[])
+            L.reverse()
+            for child in L:
+                ast.add_child(child)
             return ast    
 
     elif value == "<stmt>":
@@ -212,6 +213,17 @@ def simplify_parameters(param_node,L):
             L=L+nested_params
     return L
 
+def simplify_statements(param_node,L):
+    if not param_node or param_node.value == "^":
+        return L
+    for child in param_node.children :
+        if child.value not in ["<start_stmt>","<start_stmt_2>","^"]:
+            ast = simplify_tree(child)
+            L.append(ast)
+        else :
+            nested_params = simplify_statements(child,L)
+            L=L+nested_params
+    return L
 
 
 

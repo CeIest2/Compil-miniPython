@@ -1,11 +1,12 @@
 from graphviz import Digraph
 
-class ASTNode:
+class Arbre:
     def __init__(self, value):
         self.value = str(value)  # Convertir en chaîne
         self.children = []  # Liste ordonnée des fils
         self.nb_children = 0
         self.parent = None  # Référence vers le parent
+        self.num_identifiant = -1 
 
     def add_child(self, child, index=None):
         """Ajouter un fils à un index spécifique ou à la fin"""
@@ -20,14 +21,14 @@ class ASTNode:
 
 
 def const_test_arbre():
-    root = ASTNode('root')
-    child1 = ASTNode('child1')
-    child2 = ASTNode('child2')
-    child3 = ASTNode('child3')
+    root = Arbre('root')
+    child1 = Arbre('child1')
+    child2 = Arbre('child2')
+    child3 = Arbre('child3')
     root.add_child(child1)
     root.add_child(child2)
     root.add_child(child3)
-    root.children[1].add_child(ASTNode('child4'))
+    root.children[1].add_child(Arbre('child4'))
     return root
 
 

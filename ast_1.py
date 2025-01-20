@@ -1,4 +1,4 @@
-from arbre import ASTNode
+from arbre import Arbre
 
 
 def simplify_rules(parse_tree):
@@ -6,113 +6,169 @@ def simplify_rules(parse_tree):
     value = parse_tree.value
     
     if value == "<file>":
-        ast = ASTNode("<file>")
+        ast = Arbre("<file>")
         for child in parse_tree.children :
             if child.value not in ["38", "39"]: # NEWLINE EOF
                 print("ici" + child.value)
                 ast.add_child(simplify_tree(child))
         return ast
 
-    if value == "<start_func>":
-        ast = ASTNode("<FUNCTION>")
+    elif value == "<start_func>":
+        ast = Arbre("<FUNCTION>")
         for child in parse_tree.children:
             if child.value == "<def>":
                 return (simplify_tree(child))
         return ast
 
-    if value == "<def>":
+    elif value == "<def>":
         for child in parse_tree.children :
-            print (child.value)
             if child.value == "40":
-                name = child.value  # Nom de la fonction (40 : identifiant)
+                # Nom de la fonction (40 : identifiant)
+                name = Arbre(child.num_identifiant)
             elif child.value == "<first_para>":
                 child.value ='<parameters>'
                 params = simplify_tree (child)
             elif child.value == "<suite>":
                 body = simplify_tree(child)  # Corps (suite)
-        ast = ASTNode("<function>")
-        ast.add_child(ASTNode(name))
+        ast = Arbre("<function>")
+        ast.add_child(name)
         ast.add_child(params)
         ast.add_child(body)
         return ast
     
-    if value == "<suite>":
-        ast = ASTNode("<body>")
+    elif value == "<suite>":
+        ast = Arbre("<body>")
         for child in parse_tree.children:
             ast.add_child(simplify_tree(child))
         return ast
     
-    if value =="<parameters>":
-        ast = ASTNode("<parameters>")
+    elif value =="<parameters>":
+        ast = Arbre("<parameters>")
         L=simplify_parameters(parse_tree,[])
+        L.reverse()
         for child in L :
             ast.add_child(child)
         return ast
 
-    if value == "<start_stmt>":
+    elif value == "<start_stmt>":
         if parse_tree.children[0].value == '^':
             return None
         else:
-            ast= ASTNode("<statements>")
+            ast= Arbre("<statements>")
             for child in parse_tree.children:
-                print(child.value)
                 if child.value == "<stmt>":
                     ast.add_child(simplify_tree(child))
             return ast    
 
-    if value == "<stmt>":
-        if parse_tree.children[0].value == 9:               # if
-            condition = simplify_tree(parse_tree.children[1])  # Condition
-            if_body = simplify_tree(parse_tree.children[-2])  # Then
-            else_branch = simplify_tree(parse_tree.children[-1]) if len(parse_tree.children) > 4 else None  # Else
-            ast= ASTNode(9)
-            ast.add_child(condition)
-            ast.add_child(if_body)
-            ast.add_child(else_branch)
+    elif value == "<stmt>":
+        for child in parse_tree.children:
+            if child.value == "9":               # if
+                condition = simplify_tree(parse_tree.children[1])  # Condition
+                if_body = simplify_tree(parse_tree.children[-2])  # Then
+                else_branch = simplify_tree(parse_tree.children[-1]) if len(parse_tree.children) > 4 else None  # Else
+                ast= Arbre(9)
+                ast.add_child(condition)
+                ast.add_child(if_body)
+                ast.add_child(else_branch)
+                return ast
+            elif child.value == "<simple_stmt>":
+                return simplify_tree(child)
+            else:
+                return simplify_tree(parse_tree.children[0])  # Simple statement
+
+    elif value == "<expr>":
+        print (parse_tree.children)
+        for child in parse_tree.children:
+            print (child.value)
+        if parse_tree.children[1].value=='<const>':
+            const = parse_tree.children[1].children[0]
+            if const.value =="42":
+                left = Arbre("int : "+str(const.num_identifiant))  # Gauche
+            elif const.value =="41":
+                left = Arbre("str : "+const.num_identifiant)
+            else :
+                left = Arbre(const.value)
+            if parse_tree.children[0].children[0].value == '^':  
+                return left
+            else :
+                right = simplify_tree(parse_tree.children[0])
+                print(right)
+                ast= Arbre(right.value)
+                ast.add_child(left)
+                for child in right.children:
+                    ast.add_child(child)
+                return ast
+            
+        if parse_tree.children[1].value=='40':
+            left = Arbre(child.num_identifiant)  # Gauche
+            if parse_tree.children[0].children[0].value == '^':  
+                return left
+            else :
+                right = simplify_tree(parse_tree.children[0])
+                print(right)
+                ast= Arbre(right.value)
+                ast.add_child(left)
+                for child in right.children:
+                    ast.add_child(child)
+                return ast
+            
+        #autres possibilités de <expr>
+        return None  # Expression simple
+    
+    elif value == "<expr2>":
+        for child in parse_tree.children :
+            print (child.value)
+        if parse_tree.children[0].value == '^':
+            return None
+        elif parse_tree.children[2] and parse_tree.children[2].value=='<binop>':
+            ast = simplify_tree(parse_tree.children[2])
+            ast.add_child(simplify_tree(parse_tree.children[1]))
+            ast.add_child(simplify_tree(parse_tree.children[0]))
             return ast
-        else:
-            return simplify_tree(parse_tree.children[0])  # Simple statement
 
-    if value == "<expr>":
-        left = simplify_tree(parse_tree.children[0])  # Gauche
-        if len(parse_tree.children) > 1:  # Si opérateur binaire
-            operator = parse_tree.children[1].value
-            right = simplify_tree(parse_tree.children[2])
-            ast= ASTNode(operator)
-            ast.add_child(left)
-            ast.add_child(right)
-            return ast
-        return left  # Expression simple
 
-    if value == "<const>":
-        ast= ASTNode("<const>")
-        ast.add_child(ASTNode(parse_tree.children[0].value))
+    elif value == "<const>":
+        const = parse_tree.children[1].children[0]
+        if const.value =="42":
+            ast = Arbre("int : "+str(const.num_identifiant))
+        elif const.value =="41":
+            ast = Arbre("str : "+const.num_identifiant)
+        else :
+            ast = Arbre(const.value)
+        return ast
 
-    if value == "<depth>":
+    elif value == "<depth>":
         return simplify_depth(parse_tree)
+    
+    # if value == "<suite_ident_simple_stmt>":
 
-    if value == "<simple_stmt>":
-        if parse_tree.children[0].value == 35:  # RETURN
-            expr = simplify_tree(parse_tree.children[1])
-            ast= ASTNode(35)
+
+    elif value == "<simple_stmt>":
+        print (parse_tree.children[0].value,",",parse_tree.children[1].value)
+        if parse_tree.children[1] and parse_tree.children[1].value == "35":  # RETURN
+            expr = simplify_tree(parse_tree.children[0])
+            ast= Arbre("35")
             ast.add_child(expr)
             return ast
-        
-        elif parse_tree.children[0].value == 40 and len(parse_tree.children) > 1: #cas d'une affectation
-            if parse_tree.children[1].value == "<suite_ident_simple_stmt>":
-                identifier = parse_tree.children[0]  # Le nœud contenant l'identifiant
-                affect_suite = parse_tree.children[1] #Le noeud contenant la suite de l'affectation
-                if affect_suite.children and affect_suite.children[0].value == 43:
-                    expression = simplify_tree(affect_suite.children[1])  # Simplifie l'expression d'affectation
-                    ast = ASTNode("Assignment")
-                    ast.add_child(ASTNode("Identifier", identifier.value))  # Ajouter le nom de la variable
+        elif parse_tree.children[0].value == "<suite_ident_simple_stmt>":
+            if parse_tree.children[1].value == "40" and len(parse_tree.children) > 1: #cas d'une affectation
+                affect_suite = parse_tree.children[0] #Le noeud contenant la suite de l'affectation
+                print (affect_suite.children[0].value,',',affect_suite.children[1].value)
+                if affect_suite.children[1] and affect_suite.children[1].value == "43":
+                    print("la ",affect_suite.children[0].value)
+                    expression = simplify_tree(affect_suite.children[0])  # Simplifie l'expression d'affectation
+                    ast = Arbre("43")
+                    ast.add_child(Arbre(parse_tree.children[1].num_identifiant))  # Ajouter le nom de la variable
                     ast.add_child(expression)  # Ajouter l'expression assignée
                     return ast
+                elif affect_suite.children[0] == '<suite_ident_expr>':
+                    return None #a faire mais je pense refaire simplify tree de ca juste voir ce que fait suite ident expr)
         
-        elif parse_tree.children[0].value == 19: #cas d'un Not suivi d'expression
+        # pas vérifié
+        elif parse_tree.children[0].value == "19": #cas d'un Not suivi d'expression
             
             expression = simplify_tree(parse_tree.children[1])
-            ast = ASTNode("Not")
+            ast = Arbre("Not")
             ast.add_child(expression) #ajoutg de la première expression
 
             if len(parse_tree.children) > 2: #traitement de <expr2> si nécessaire
@@ -125,16 +181,16 @@ def simplify_rules(parse_tree):
             
             return ast
         
-        elif parse_tree.children[0].value == 34: # cas du prin on ognore les parenthèses
-            ast = ASTNode("Print")
-            ast.add_child(simplify_tree(parse_tree.children[2]))
+        elif parse_tree.children[1] and parse_tree.children[1].value == '34': # cas du print on ignore les parenthèses
+            ast = Arbre("34")
+            ast.add_child(simplify_tree(parse_tree.children[0]))
             return ast
             
         else:
             return simplify_tree(parse_tree.children[0])  # D'autres cas
 
-    if value == "<binop>":
-        return ASTNode(parse_tree.children[0].value)  # Opérateur
+    elif value == "<binop>":
+        return Arbre(parse_tree.children[0].value)  # Opérateur
 
     return None
 
@@ -149,14 +205,11 @@ def simplify_parameters(param_node,L):
         return L
     for child in param_node.children :
         if child.value == "40":
-            ast = simplify_tree(child)
+            ast=Arbre(child.num_identifiant)
             L.append(ast)
         elif child.value == "<parameters>":
-            #ast = simplify_parameters(child)
             nested_params = simplify_parameters(child,L)
             L=L+nested_params
-            # for nested_child in nested_params:  # Ajouter tous les identifiants imbriqués
-            #     L.append(nested_child)
     return L
 
 
@@ -180,7 +233,7 @@ def simplify_tree(parse_tree):
         return None
     
     if not parse_tree.children:
-        return ASTNode(parse_tree.value)
+        return Arbre(parse_tree.value)
     
     value = parse_tree.value
 
@@ -189,7 +242,7 @@ def simplify_tree(parse_tree):
 
     # Si aucune règle spécifique n'a été appliquée, simplifier récursivement
     # if not simplified_node:
-    #     simplified_node = ASTNode(parse_tree.value)
+    #     simplified_node = Arbre(parse_tree.value)
     #     for child in parse_tree.children:
     #         simplified_child = simplify_tree(child)
     #         if simplified_child:  # Vérifie que le nœud enfant n'est pas None
@@ -214,7 +267,7 @@ def simplify_depth(parse_tree):
         current_depth = current_depth.children[2]
 
     #on construit le noeud après avoir recup toute les expresssiosn dans expressions
-    depth_node = ASTNode("List")
+    depth_node = Arbre("List")
     for i in  expressions:
         depth_node.add_child(i)
     

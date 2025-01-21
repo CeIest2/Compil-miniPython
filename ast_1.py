@@ -114,8 +114,9 @@ def simplify_rules(parse_tree):
         return suite_if
 
     elif value == "<expr>":
-        # for child in parse_tree.children:
-        #     print (child.value)
+        for child in parse_tree.children:
+            print ('here ',child.value)
+
         if parse_tree.children[1].value=='<const>':
             const = parse_tree.children[1].children[0]
             if const.value =="42":
@@ -191,6 +192,25 @@ def simplify_rules(parse_tree):
                 ast.add_child(expr_not)
                 for child in expr2.children:
                     ast.add_child(child)
+                return ast
+            
+        elif parse_tree.children[-1].value=='2':               # - (unaire)
+            expr2 = simplify_tree(parse_tree.children[0])       #right
+            expr = simplify_tree(parse_tree.children[1])        #left
+            expr_unaire = Arbre("2")
+            #if expr2 == None: 
+            if expr.value not in ["21","22""19","12","13","23","24","25","26","1","2","3","4","6"]:
+                expr_unaire.add_child(expr) 
+                # ast= Arbre(expr.value)
+                # expr_unaire.add_child(expr.children[0])
+                # ast.add_child(expr_unaire)
+                # ast.add_child(expr.children[1])
+                return expr_unaire
+            else :
+                ast= Arbre(expr.value)
+                expr_unaire.add_child(expr.children[0])
+                ast.add_child(expr_unaire)
+                ast.add_child(expr.children[1])
                 return ast
 
 

@@ -34,7 +34,7 @@ def analyse_syntaxique(liste_token):
                 if sommet_pile.name == cara[0]:
                     # Ajouter le terminal comme fils
                     new_node = Arbre(sommet_pile.name)
-                    print (cara[0])
+                    #print (cara[0])
                     if cara[0] == 40:
                         try:
                             for cle, value in liste_token.dico_idf.items():
@@ -58,7 +58,7 @@ def analyse_syntaxique(liste_token):
                     if cara[0] == 42:
                         try:
                             for cle, value in liste_token.dico_number.items():
-                                print (cle,value)
+                                #print (cle,value)
                                 if value == cara[1]:
                                     nom = cle
                                     break
@@ -66,7 +66,7 @@ def analyse_syntaxique(liste_token):
                         except:
                             print("est ce que ca marche")
                             break
-                    print(nom)
+                    #print(nom)
                     noeud_parent.add_child(new_node)
 
                     cara_ind += 1

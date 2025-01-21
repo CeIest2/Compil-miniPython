@@ -2,6 +2,7 @@ from graphviz import Digraph
 import random
 
 
+
 class Arbre:
     def __init__(self, value):
         self.value = str(value)  # Convertir en chaîne
@@ -12,13 +13,14 @@ class Arbre:
 
     def add_child(self, child, index=None):
         """Ajouter un fils à un index spécifique ou à la fin"""
-        if index is not None:
-            self.children.insert(index, child)
-            child.parent = self
-        else:
-            self.children.append(child)
-            child.parent = self
-        self.nb_children += 1
+        if child is not None :
+            if index is not None:
+                self.children.insert(index, child)
+                child.parent = self
+            else:
+                self.children.append(child)
+                child.parent = self
+            self.nb_children += 1
 
 
 
@@ -64,5 +66,5 @@ def visualize_ast(root):
 
 if __name__ == '__main__':
     # Utilisation
-    root = const_test_arbre()
-    visualize_ast(root)
+    #visualize_ast(root)
+    pass

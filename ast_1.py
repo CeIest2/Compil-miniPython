@@ -455,3 +455,11 @@ def suppr_parentheses(node):
                 return
     for child in node.children:
         suppr_parentheses(child)
+
+
+def ast_final(tree):
+    ast = simplify_tree(tree)       #simplifie les regles
+    descend_not(ast)                #gere la prio sur not
+    traverse_tree_retourne(ast)     #gere prio sur operateurs binaires
+    suppr_parentheses(ast)          #retire les parenthèses
+    return ast

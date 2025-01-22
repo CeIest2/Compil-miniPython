@@ -1,1 +1,4 @@
 colorama
+pathlib
+os
+graphviz

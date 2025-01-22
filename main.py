@@ -15,14 +15,14 @@ def analyseur(code_entré,visualisation = True):
         print(liste_token.message_erreur)
         return -1
 
-    arbre_derivation = anasyn.analyse_syntaxique(liste_token)
-    if not arbre_derivation:
+    arbre_derivation, erreur = anasyn.analyse_syntaxique(liste_token)
+    if erreur != None:
         print("Erreur syntaxique")
         return -1
 
-    ast_const.simplify_rules(arbre_derivation)
+    ast = ast_const.simplify_rules(arbre_derivation)
     if visualisation:
-        arbre.visualize_ast(arbre_derivation)
+        arbre.visualize_ast(ast)
 
     return 1
     

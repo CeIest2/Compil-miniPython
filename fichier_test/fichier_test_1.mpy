@@ -1,0 +1,8 @@
+# Test 1: Commentaires et indentation basique
+def test1():
+    # Ceci est un commentaire
+    x = 42  # Commentaire en fin de ligne
+    if x > 0:
+        print("positif")
+    else:
+        print("négatif")

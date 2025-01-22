@@ -1,0 +1,11 @@
+# Test 5: Expressions logiques complexes
+def test_logique():
+    a = 10
+    b = 20
+    c = 30
+    if (a < b and b < c) or not (a == b):
+        if a != b and not (b > c or c < a):
+            return True
+        else:
+            return False
+    return None

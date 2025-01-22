@@ -1,0 +1,18 @@
+# Test 8: Mélange de toutes les structures
+def programme_test_complet():
+    # Initialisation des variables
+    _compteur = 0
+    _resultat = None
+    message = "Test\n\"complexe\""
+    
+    for valeur in [1, 2, 3, 4, 5]:
+        if valeur > 0 and valeur < 4:
+            _compteur = _compteur + valeur
+        else:
+            if valeur >= 4:
+                _resultat = valeur * 2
+            else:
+                _resultat = valeur // 2
+        if _compteur != 0 and not _resultat == None:
+            print("Traitement en cours")
+    return True

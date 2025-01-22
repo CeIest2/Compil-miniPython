@@ -1,0 +1,8 @@
+# Test 10: Expressions arithmétiques complexes
+def calculs_complexes():
+    a = 5
+    b = 3
+    c = 2
+    resultat = (a + b) * c // (a - b) + (-c)
+    autre = a * b + c * (a + b * c) // (a - b)
+    return resultat + autre

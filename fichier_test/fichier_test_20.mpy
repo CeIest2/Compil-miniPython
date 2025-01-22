@@ -1,0 +1,8 @@
+# Test 12: Programme avec beaucoup d'opérations sur les chaînes
+def manipulations_chaines():
+    chaine1 = "Premier\n\"niveau\""
+    chaine2 = "Second\\niveau"
+    chaine3 = "Troisieme\"niveau\""
+    print(chaine1)
+    print(chaine2)
+    return chaine3

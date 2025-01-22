@@ -1,0 +1,12 @@
+# Test 4: Structure de contrôle imbriquée avec opérations complexes
+def calculatrice_avancee():
+    a = 15
+    b = 3
+    if a // b == 5:
+        if a % b == 0:
+            print("Division exacte")
+        else:
+            print("Division avec reste")
+            if a > 10 and b < 5:
+                return a * b
+    return None

@@ -1,0 +1,11 @@
+# Test 13: Combinaison de boucles et conditions
+def structure_complexe():
+    valeurs = [1, 2, 3, 4, 5]
+    compteur = 0
+    for val in valeurs:
+        if val > 2:
+            if val < 5:
+                for i in valeurs:
+                    if i != val:
+                        compteur = compteur + 1
+    return compteur

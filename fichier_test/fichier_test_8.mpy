@@ -1,0 +1,14 @@
+# Test 8: Mix de tout
+def programme_complet():
+    # Initialisation
+    _compteur = 0
+    resultat123 = None
+    if True and not False:
+        texte = "Test\n\"complexe\""
+        for i in [1, 2, 3]:
+            _compteur = _compteur + i
+            if i <= 2:
+                print(i)
+            else:
+                return None
+    return True

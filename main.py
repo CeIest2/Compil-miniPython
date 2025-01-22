@@ -10,7 +10,7 @@ def analyseur(code_entré, visualisation=True):
     """
     liste_token = analex.analyseur(code_entré)
     if -1 in liste_token.liste_token:
-        print(liste_token.message_erreur)
+        liste_token.afficher_erreurs()
         return -1
     
     arbre_derivation, erreur = anasyn.analyse_syntaxique(liste_token)
@@ -18,7 +18,7 @@ def analyseur(code_entré, visualisation=True):
         print("Erreur syntaxique")
         return -1
     
-    ast = ast_const.simplify_tree(arbre_derivation)
+    ast = ast_const.ast_final(arbre_derivation)
     if visualisation:
         arbre.visualize_ast(ast)
     return 1

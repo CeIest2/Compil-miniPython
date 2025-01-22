@@ -83,7 +83,9 @@ def analyse_syntaxique(liste_token):
             try:
                 production = table_analyse.table[sommet_pile.name][cara_suivant]
             except KeyError:
-                print("Erreur de syntaxe : Production introuvable.")
+                print('oui')
+                liste_token_test.message_erreur("Erreur lexical", liste_token_test.liste_token[cara_ind], cara_ind)
+                liste_token_test.afficher_erreurs()
                 break
 
             if production:

@@ -16,4 +16,4 @@ def test_operateurs():
     c = a != b   # différent
     b = not a    # négation
     b = a and b  # et logique
-    b = a or b   # ou logique
+    b = a or b

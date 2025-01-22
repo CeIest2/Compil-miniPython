@@ -18,7 +18,7 @@ def analyseur(code_entré, visualisation=True):
         print("Erreur syntaxique")
         return -1
     
-    ast = ast_const.simplify_tree(arbre_derivation)
+    ast = ast_const.ast_final(arbre_derivation)
     if visualisation:
         arbre.visualize_ast(ast)
     return 1

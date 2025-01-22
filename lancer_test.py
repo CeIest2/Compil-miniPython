@@ -20,10 +20,9 @@ def test_complet():
         if fichier.is_file():
             i +=1
             analyseur(fichier)
-            print("##############################################")
             print(fichier.name)
             print(i)
-            print(("##############################################"))
+
 
 
 

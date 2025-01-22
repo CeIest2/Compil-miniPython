@@ -110,8 +110,6 @@ def simplify_rules(parse_tree):
         return suite_if
 
     elif value == "<expr>":
-        for child in parse_tree.children:
-            print ('here ',child.value)
 
         if parse_tree.children[1].value=='<const>':
             const = parse_tree.children[1].children[0]
@@ -220,8 +218,6 @@ def simplify_rules(parse_tree):
             return None
         
         elif parse_tree.children[2] and parse_tree.children[2].value=='<binop>':
-            for child in parse_tree.children:
-                print ('expr2 : ',child.value)
             binop = simplify_tree(parse_tree.children[2])
             expr = simplify_tree(parse_tree.children[1])
             binop.add_child(expr)
@@ -252,8 +248,7 @@ def simplify_rules(parse_tree):
         if parse_tree.children[0]=="^":
             return None
         else :
-            for child in parse_tree.children:
-                print ("suite_expr : ", child.value)
+            pass
                 ###commment ca marche ???
 
 
@@ -311,9 +306,8 @@ def simplify_rules(parse_tree):
         if len(parse_tree.children)==1:
             return simplify_tree(parse_tree.children[0])
         else :
-            for child in parse_tree.children :
-                print("suite_ident_expr : ", child.value)
-                #comment on fait ???
+            pass
+            #comment on fait ???
 
     return None
 
@@ -382,14 +376,6 @@ def simplify_tree(parse_tree):
     # Appliquer les règles de simplification
     simplified_node = simplify_rules(parse_tree)
 
-    # Si aucune règle spécifique n'a été appliquée, simplifier récursivement
-    # if not simplified_node:
-    #     simplified_node = Arbre(parse_tree.value)
-    #     for child in parse_tree.children:
-    #         simplified_child = simplify_tree(child)
-    #         if simplified_child:  # Vérifie que le nœud enfant n'est pas None
-    #             simplified_node.add_child(simplified_child)
-
     return simplified_node
 
 
@@ -419,7 +405,10 @@ def traverse_tree_retourne(node):
         
     elif node.value in ["1", "2"]:
         retourneur(node, ["1", "2", "12", "13", "23", "24", "25", "26", "19", "22", "21"])
-      
+
+    elif node.value in ["12", "13", "23", "24", "25", "26"]:
+        retourneur(node, ["12", "13", "23", "24", "25", "26","19", "22", "21"])
+    
     elif node.value in ["22"]:
         retourneur(node, ["22", "21"])
         

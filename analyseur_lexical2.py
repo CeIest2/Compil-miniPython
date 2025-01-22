@@ -158,15 +158,70 @@ class Liste_token:
         # Vérifier si la valeur est dans l'intervalle
         return INT64_MIN <= valeur <= INT64_MAX
     
-    def message_erreur(self, type_erreur, token_probleme):
-        last_line = self.reconstruction_last_line()
+    def message_erreur(self, type_erreur, token_probleme, token_index=None):
+        """
+        Crée un message d'erreur formaté.
+        
+        Args:
+            type_erreur (str): Le type d'erreur à afficher
+            token_probleme (str): Le token qui cause l'erreur
+            token_index (int, optional): L'index du token problématique dans la liste_token
+        """
+        if token_index is not None:
+            # Reconstruction de la ligne spécifique contenant le token problématique
+            ligne_numero = 1  # Compte les NEWLINE jusqu'à l'index
+            ligne_courante = []
+            index_dans_ligne = 0
+            
+            for i in range(token_index + 1):
+                if self.liste_token[i] == 38:  # NEWLINE
+                    ligne_numero += 1
+                    ligne_courante = []
+                    index_dans_ligne = 0
+                else:
+                    ligne_courante.append(self.liste_token[i])
+                    index_dans_ligne += 1
+            
+            # Reconstruction du texte de la ligne jusqu'au token problématique
+            ligne_texte = ""
+            for token in ligne_courante[:index_dans_ligne]:
+                if isinstance(token, int):
+                    if token in self.dict_lexique.values():
+                        ligne_texte += list(self.dict_lexique.keys())[list(self.dict_lexique.values()).index(token)] + " "
+                elif isinstance(token, tuple):
+                    token_type, token_value = token
+                    if token_type == 40:  # Identifiant
+                        for ident, id_value in self.dico_idf.items():
+                            if id_value == token_value:
+                                ligne_texte += ident + " "
+                                break
+                    elif token_type == 41:  # Char
+                        for char, char_value in self.dico_char.items():
+                            if char_value == token_value:
+                                ligne_texte += '"' + char + '" '
+                                break
+                    elif token_type == 42:  # Nombre
+                        for nombre, num_value in self.dico_number.items():
+                            if num_value == token_value:
+                                ligne_texte += nombre + " "
+                                break
+        else:
+            # Comportement original
+            ligne_texte = self.reconstruction_last_line()
+            ligne_numero = self.liste_token.count(38) + 1
+
+        # Création du message d'erreur formaté
         error_message = (
-            f"{Fore.RED}File \"{os.path.abspath(__file__)}\", line {self.liste_token.count(38)+1}{Style.RESET_ALL}\n"
-            f"{last_line}{Fore.RED}{token_probleme}{Style.RESET_ALL}\n"
-            f"{' ' * len(last_line)}{Fore.GREEN}^^^{Style.RESET_ALL}"
+            f"{Fore.RED}File \"{os.path.abspath(__file__)}\", line {ligne_numero}{Style.RESET_ALL}\n"
+            f"{ligne_texte.strip()}{Fore.RED}{token_probleme}{Style.RESET_ALL}\n"
+            f"{' ' * len(ligne_texte.strip())}{Fore.GREEN}^^^{Style.RESET_ALL}"
             f"\n{Fore.YELLOW}{type_erreur}{Style.RESET_ALL}"
         )
         self.liste_messages_erreurs.append(error_message)
+
+    def afficher_erreurs(self):
+        for message in self.liste_messages_erreurs:
+            print(message)
 
 
 

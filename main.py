@@ -10,7 +10,7 @@ def analyseur(code_entré, visualisation=True):
     """
     liste_token = analex.analyseur(code_entré)
     if -1 in liste_token.liste_token:
-        print(liste_token.message_erreur)
+        liste_token.afficher_erreurs()
         return -1
     
     arbre_derivation, erreur = anasyn.analyse_syntaxique(liste_token)

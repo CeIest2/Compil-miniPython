@@ -1,0 +1,9 @@
+# Test 4: Test exhaustif des identifiants
+_test = 1
+test_ = 2
+TEST_MAJUSCULE = 3
+test_minuscule = 4
+Test_Mixte_123 = 5
+_123_test = 6
+TeStMiXtE = 7
+t1e2s3t4 = 8

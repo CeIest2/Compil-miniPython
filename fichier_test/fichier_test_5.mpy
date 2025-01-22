@@ -1,0 +1,9 @@
+# Test 5: Boucle for et mots-clés
+def test_boucle():
+    nombres = [1, 2, 3]
+    for x in nombres:
+        if True:
+            print(x)
+        else:
+            return None
+    return True

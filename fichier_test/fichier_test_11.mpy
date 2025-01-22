@@ -1,0 +1,6 @@
+# Test 3: Manipulation de chaînes complexes
+def test_chaines():
+    msg1 = "Ligne 1\n\n\"Citation\"\nLigne 4"
+    msg2 = "Test des \" guillemets"
+    msg3 = "Test\nMulti\nLigne"
+    return msg1

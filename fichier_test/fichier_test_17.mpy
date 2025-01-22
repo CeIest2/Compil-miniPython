@@ -1,0 +1,12 @@
+# Test 9: Cas limites d'indentation
+def test_indentation_limite():
+    x = 1
+    if x > 0:
+                    if x < 10:
+                              print("très indenté")
+                    else:
+                              print("moins indenté")
+    else:
+                    if x < 0:
+                            print("indentation variée")
+                            print("encore plus indenté")

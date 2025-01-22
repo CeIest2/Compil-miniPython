@@ -1,7 +1,7 @@
 from grammaire import *
 import analyseur_lexical2 as analex
 from arbre import Arbre, visualize_ast
-from AST_constructeur import simplify_tree
+from ast_1 import simplify_tree
 
 def analyse_syntaxique(liste_token):
     grammaire = Grammaire("docs/Grammaire_PCL.txt")
@@ -34,14 +34,40 @@ def analyse_syntaxique(liste_token):
                 if sommet_pile.name == cara[0]:
                     # Ajouter le terminal comme fils
                     new_node = Arbre(sommet_pile.name)
-                    if int(cara[0]) == 40:
-                        new_node.num_identifiant = liste_token.dico_idf[cara[1]]
-                    if int(cara[0]) == 41:
-                        new_node.num_identifiant = liste_token.dico_char[cara[1]]
-                    if int(cara[0]) == 42:
-                        new_node.num_identifiant = liste_token.dico_number[cara[1]]
-
-                    noeud_parent.add_child(Arbre(sommet_pile.name))
+                    #print (cara[0])
+                    if cara[0] == 40:
+                        try:
+                            for cle, value in liste_token.dico_idf.items():
+                                if value == cara[1]:
+                                    nom = cle
+                                    break
+                            new_node.num_identifiant = nom
+                        except:
+                            print("est ce que ca marche")
+                            break
+                    if cara[0] == 41:
+                        try:
+                            for cle, value in liste_token.dico_char.items():
+                                if value == cara[1]:
+                                    nom = cle
+                                    break
+                            new_node.num_identifiant = nom
+                        except:
+                            print("est ce que ca marche")
+                            break
+                    if cara[0] == 42:
+                        try:
+                            for cle, value in liste_token.dico_number.items():
+                                #print (cle,value)
+                                if value == cara[1]:
+                                    nom = cle
+                                    break
+                            new_node.num_identifiant = nom
+                        except:
+                            print("est ce que ca marche")
+                            break
+                    #print(nom)
+                    noeud_parent.add_child(new_node)
 
                     cara_ind += 1
                 else:
@@ -103,3 +129,4 @@ if __name__ == '__main__':
         ast = simplify_tree(arbre_derivation)
         if ast:
             visualize_ast(ast)
+            pass

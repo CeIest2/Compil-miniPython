@@ -1,0 +1,13 @@
+# Test 6: Indentations multiples et opérateurs
+def indentation_complexe():
+    x = 1
+    if x > 0:
+        if x < 10:
+            if x != 5:
+                print("niveau 3")
+            else:
+                print("else niveau 3")
+        else:
+            print("else niveau 2")
+    else:
+        print("else niveau 1")

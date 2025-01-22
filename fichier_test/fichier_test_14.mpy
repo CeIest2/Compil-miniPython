@@ -1,0 +1,8 @@
+# Test 6: Test de tous les types de nombres
+def test_nombres():
+    n1 = 0
+    n2 = 1
+    n3 = 123
+    n4 = 9999
+    n5 = 1000000
+    return n1 + n2 + n3 + n4 + n5

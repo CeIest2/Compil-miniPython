@@ -1,0 +1,19 @@
+# Test 7: Tous les opérateurs
+def test_operateurs():
+    a = 5
+    b = 3
+    c = a + b    # addition
+    c = a - b    # soustraction
+    c = a * b    # multiplication
+    c = a // b   # division entière
+    c = a % b    # modulo
+    c = -a       # moins unaire
+    c = a < b    # plus petit
+    c = a <= b   # plus petit ou égal
+    c = a > b    # plus grand
+    c = a >= b   # plus grand ou égal
+    c = a == b   # égal
+    c = a != b   # différent
+    b = not a    # négation
+    b = a and b  # et logique
+    b = a or b   # ou logique

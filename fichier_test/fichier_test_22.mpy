@@ -1,0 +1,14 @@
+# Test 14: Utilisation de tous les mots-clés
+def test_mots_cles():
+    x = True
+    y = False
+    z = None
+    if not x and y:
+        return z
+    else:
+        for i in [1, 2, 3]:
+            if i in [1, 2]:
+                print(i)
+            else:
+                return None
+    return True or False

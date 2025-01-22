@@ -1,0 +1,8 @@
+# Test 11: Tests de comparaisons multiples
+def test_comparaisons():
+    x = 42
+    if x > 0 and x < 100:
+        if x >= 42 and x <= 50:
+            if x == 42 or x != 43:
+                return True
+    return False

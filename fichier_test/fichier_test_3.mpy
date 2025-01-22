@@ -1,0 +1,8 @@
+# Test 3: Nombres et opérateurs
+def calculateur():
+    a = 0
+    b = 123
+    c = 9999
+    resultat = ((a + b) * c) // 2
+    test = a <= b and b >= c or not c == 0
+    return resultat

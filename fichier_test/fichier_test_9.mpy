@@ -1,0 +1,10 @@
+# Test 2: Boucles imbriquées et conditions multiples
+def motif_complexe():
+    nombres = [1, 2, 3, 4]
+    for i in nombres:
+        for j in nombres:
+            if i != j and i < j:
+                if i * j > 5:
+                    print(i + j)
+                else:
+                    print(i * j)

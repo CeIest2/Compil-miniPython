@@ -1,7 +1,7 @@
 from grammaire import *
-import analyseur_lexical2 as analex
+import analyseur_lexical as analex
 from arbre import Arbre, visualize_ast
-from ast_1 import simplify_tree
+from ast import simplify_tree
 
 def analyse_syntaxique(liste_token):
     grammaire = Grammaire("docs/Grammaire_PCL.txt")
@@ -14,21 +14,25 @@ def analyse_syntaxique(liste_token):
 
     cara_ind = 0
     arbre = pile_noeuds[0]  # La racine de l'arbre
-
+    ligne =0
     while pile:
         sommet_pile = pile[-1]
         noeud_parent = pile_noeuds[-1]
 
         # Cas de lecture d'un terminal au début de la pile
         if sommet_pile.type_token == "terminal":
+            
             cara = liste_token_test.liste_token[cara_ind]
+
+            if cara == 39:
+                ligne += 1
             if isinstance(cara, int):
                 if sommet_pile.name == cara:
                     # Ajouter le terminal comme fils
                     noeud_parent.add_child(Arbre(sommet_pile.name))
                     cara_ind += 1
                 else:
-                    print("Erreur syntaxique : terminal inattendu.")
+                    print(f"Erreur syntaxique ligne {ligne} : terminal inattendu.")
                     break
             else:
                 if sommet_pile.name == cara[0]:
@@ -68,7 +72,7 @@ def analyse_syntaxique(liste_token):
 
                     cara_ind += 1
                 else:
-                    print("Erreur syntaxique : terminal inattendu.")
+                    print(f"Erreur syntaxique ligne {ligne} : terminal inattendu.")
                     break
             pile.pop()
             pile_noeuds.pop()
@@ -83,9 +87,8 @@ def analyse_syntaxique(liste_token):
             try:
                 production = table_analyse.table[sommet_pile.name][cara_suivant]
             except KeyError:
-                print('oui')
-                liste_token_test.message_erreur("Erreur lexical", liste_token_test.liste_token[cara_ind], cara_ind)
-                liste_token_test.afficher_erreurs()
+                print('Erreur syntaxique')
+                print(f"Erreur syntaxique ligne {ligne} : terminal inattendu.")
                 break
 
             if production:

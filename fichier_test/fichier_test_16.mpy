@@ -4,7 +4,6 @@ def programme_test_complet():
     _compteur = 0
     _resultat = None
     message = "Test\n\"complexe\""
-    
     for valeur in [1, 2, 3, 4, 5]:
         if valeur > 0 and valeur < 4:
             _compteur = _compteur + valeur

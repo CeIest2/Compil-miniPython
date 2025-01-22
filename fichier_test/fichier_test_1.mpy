@@ -2,7 +2,7 @@
 def test1():
     # Ceci est un commentaire
     x = 42  # Commentaire en fin de ligne
-    else x > 0:
+    if x > 0:
         print("positif")
     else:
         print("négatif")

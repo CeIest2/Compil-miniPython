@@ -1,5 +1,5 @@
 from grammaire import *
-import analyseur_lexical2 as analex
+import analyseur_lexical as analex
 from arbre import Arbre, visualize_ast
 
 def analyse_syntaxique(liste_token):

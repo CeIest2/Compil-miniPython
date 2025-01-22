@@ -1,5 +1,4 @@
 # Test 7: Commentaires variés
-# Commentaire simple
 def test_commentaires():
     x = 1 # Commentaire après code
     # Commentaire avant code

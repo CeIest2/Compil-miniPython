@@ -1,9 +1,10 @@
 # Test 2: Identifiants variés
-variable = 0
-_variable = 1
-variable_1 = 2
-Variable_Test = 3
-_2variable = 4
-# Test 4: Chaînes de caractères avec échappement
-message1 = "Test des \"guillemets\""
-message2 = "Ligne 1\nLigne 2"
+def fucnt():
+    variable = 0
+    _variable = 1
+    variable_1 = 2
+    Variable_Test = 3
+    _2variable = 4
+    # Test 4: Chaînes de caractères avec échappement
+    message1 = "Test des \"guillemets\""
+    message2 = "Ligne 1\nLigne 2"

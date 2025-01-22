@@ -1,6 +1,6 @@
-import analyseur_lexical2 as analex
+import analyseur_lexical as analex
 import analyseur_syntaxique_ss_erreru as anasyn
-import ast_1 as ast_const
+import ast as ast_const
 import arbre
 import sys
 
@@ -8,6 +8,7 @@ def analyseur(code_entré, visualisation=True):
     """
     Cette fonction a pour but de créer l'arbre syntaxique et d'afficher ce dernier
     """
+    print('###')
     liste_token = analex.analyseur(code_entré)
     if -1 in liste_token.liste_token:
         liste_token.afficher_erreurs()
@@ -15,7 +16,6 @@ def analyseur(code_entré, visualisation=True):
     
     arbre_derivation, erreur = anasyn.analyse_syntaxique(liste_token)
     if erreur is not None:
-        print("Erreur syntaxique")
         return -1
     
     ast = ast_const.ast_final(arbre_derivation)

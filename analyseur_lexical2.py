@@ -362,6 +362,12 @@ def analyseur(fichier : str) -> Liste_token:
 if __name__=='__main__':
 
     liste_token = analyseur("fichier_test/fichier_test_lexeur/mini_test.txt")
+    print(liste_token.reconstruire_texte())
+    print(f"liste des tokens : {liste_token.liste_token}")
+    print(f"dico des chars : {liste_token.dico_char}")
+    print(f"dico des identifiant : {liste_token.dico_idf}")
+    print(f"ldico des num : {liste_token.dico_number}")
+
 
     if liste_token.liste_messages_erreurs == []: print("analyse du fichier a réussi")
     else : 
@@ -370,9 +376,3 @@ if __name__=='__main__':
         for message in liste_token.liste_messages_erreurs:
             print("========================================")
             print(message)
-
-    print(liste_token.reconstruire_texte())
-    print(liste_token.liste_token)
-    print(liste_token.dico_idf)
-    print(liste_token.dico_char)
-    print(liste_token.dico_number)

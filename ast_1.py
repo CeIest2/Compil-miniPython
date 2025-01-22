@@ -156,13 +156,29 @@ def simplify_rules(parse_tree):
             
         elif parse_tree.children[-1].value=='17':
             expr2 = simplify_tree(parse_tree.children[0])       #right
-            #depth = simplify_tree(parse_tree.children[1])       # ??
+            depth = simplify_tree(parse_tree.children[1])       # ??
             expr = simplify_tree(parse_tree.children[2])        #left
-            if expr2 == None:  
-                return expr
+            # if depth == None :
+            #     if expr2 == None:  
+            #         return expr
+            #     else :
+            #         ast= Arbre(expr2.value)
+            #         ast.add_child(expr)
+            #         for child in expr2.children:
+            #             ast.add_child(child)
+            #         return ast
+            # else : 
+            ast_list = Arbre("<list>")
+            ast_list.add_child(expr)
+            L=simplify_depth(parse_tree.children[1],[])
+            L.reverse()
+            for child in L :
+                ast_list.add_child(child)
+            if expr2 == None:
+                return ast_list
             else :
                 ast= Arbre(expr2.value)
-                ast.add_child(expr)
+                ast.add_child(ast_list)
                 for child in expr2.children:
                     ast.add_child(child)
                 return ast
@@ -250,7 +266,10 @@ def simplify_rules(parse_tree):
         return ast
 
     elif value == "<depth>":
-        return simplify_depth(parse_tree)
+        if parse_tree.children[0].value == "^":
+            return None
+        else : 
+            return simplify_depth(parse_tree,[])
     
     # if value == "<suite_ident_simple_stmt>":
 
@@ -359,6 +378,19 @@ def simplify_statements(param_node,L):
     return L
 
 
+def simplify_depth(param_node,L):
+    if not param_node or param_node.value == "^":
+        return L
+    for child in param_node.children :
+        if child.value == "<expr>":
+            ast=simplify_tree(child)
+            L.append(ast)
+        elif child.value == "<depth>":
+            nested_params = simplify_depth(child,L)
+            L=L+nested_params
+    return L
+
+
 # def manage_prio_op(node1,node2):
 #     op1 = node1.value
 #     op2 = node2.value
@@ -418,26 +450,3 @@ def simplify_tree(parse_tree):
     #             simplified_node.add_child(simplified_child)
 
     return simplified_node
-
-
-def simplify_depth(parse_tree):
-
-    expressions = []
-
-    #On traite la première expression après la virgule
-    current_expr = parse_tree.children[1]
-    expressions.append(simplify_tree(current_expr))
-
-    #on traite les expressions qui suivent
-
-    current_depth = parse_tree.children[2]
-    while current_depth.value == "<depth>":
-        expressions.append(simplify_tree(current_depth.children[1]))
-        current_depth = current_depth.children[2]
-
-    #on construit le noeud après avoir recup toute les expresssiosn dans expressions
-    depth_node = Arbre("List")
-    for i in  expressions:
-        depth_node.add_child(i)
-    
-    return depth_node

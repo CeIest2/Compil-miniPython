@@ -13,11 +13,13 @@ def simplify_rules(parse_tree):
         return ast
 
     elif value == "<start_func>":
-        ast = Arbre("<FUNCTION>")
-        for child in parse_tree.children:
-            if child.value == "<def>":
-                return (simplify_tree(child))
-        return ast
+        if parse_tree.children[0]=='^':
+            return None
+        else :
+            ast = Arbre("<FUNCTION>")
+            for child in parse_tree.children:
+                if child.value == "<def>":
+                    return (simplify_tree(child))
 
     elif value == "<def>":
         for child in parse_tree.children :
@@ -48,7 +50,7 @@ def simplify_rules(parse_tree):
                     L.reverse()
                     for child in L:
                         ast.add_child(child)
-                    return ast 
+                    return ast
         return ast
     
     elif value =="<parameters>":
@@ -59,7 +61,16 @@ def simplify_rules(parse_tree):
             ast.add_child(child)
         return ast
 
-    # elif value == "<start_stmt>":
+    elif value == "<start_stmt>":
+        if parse_tree.children[0].value == '^':
+            return None
+        else:
+            ast= Arbre("<statements>")
+            L=simplify_statements(parse_tree,[])
+            L.reverse()
+            for child in L:
+                ast.add_child(child)
+            return ast 
     #     if parse_tree.children[0].value == '^':
     #         return None
     #     else:

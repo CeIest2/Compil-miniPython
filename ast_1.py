@@ -167,7 +167,8 @@ def simplify_rules(parse_tree):
         
         elif parse_tree.children[-1].value=='15':
             expr2 = simplify_tree(parse_tree.children[0])       #right
-            expr = simplify_tree(parse_tree.children[1])        #left
+            expr=Arbre("()")
+            expr.add_child(simplify_tree(parse_tree.children[1]))        #left
             if expr2 == None:  
                 return expr
             else :
@@ -393,33 +394,49 @@ def simplify_tree(parse_tree):
 
 
 
-
 def retourneur(node, values):
-    if node.value in values:
-        if node.nb_children == 2:
-            if node.children[1].value in values and node.children[1].nb_children == 2:
-                a_retourner = node.children[1]
-                parent = node.parent
-                for i in range(parent.nb_children):
-                    if parent.children[i] == node:
-                        parent.children[i] = a_retourner
-                        a_retourner.parent = parent
-                        
-                        node.children[1] = a_retourner.children[0]
-                        node.children[1].parent = node
-                        
-                        a_retourner.children[0] = node
-                        node.parent = a_retourner
-                        
-                        traverse_tree_retourne(a_retourner)
-                        return
+    if node.nb_children == 2:
+        if node.children[1].value in values and node.children[1].nb_children == 2:
+            a_retourner = node.children[1]
+            parent = node.parent
+            for i in range(parent.nb_children):
+                if parent.children[i] == node:
+                    parent.children[i] = a_retourner
+                    a_retourner.parent = parent
+                    
+                    node.children[1] = a_retourner.children[0]
+                    node.children[1].parent = node
+                    
+                    a_retourner.children[0] = node
+                    node.parent = a_retourner
+                    
+                    traverse_tree_retourne(a_retourner)
+                    return
 
 def traverse_tree_retourne(node):
-    retourneur(node, ["1", "2"])
-    #retourneur(node, ["3", "4", "6"])
-    retourneur(node, ["3", "30", "6"])
-    retourneur(node, ["22"])
-    retourneur(node, ["21"])
+    if node.value in ["3", "30", "6"]:
+        retourneur(node, ["3", "30", "6", "1", "2", "12", "13", "23", "24", "25", "26", "19", "22", "21"])
+        
+    elif node.value in ["1", "2"]:
+        retourneur(node, ["1", "2", "12", "13", "23", "24", "25", "26", "19", "22", "21"])
+      
+    elif node.value in ["22"]:
+        retourneur(node, ["22", "21"])
+        
+    elif node.value in ["21"]:
+        retourneur(node, ["21"])
 
     for child in node.children:
         traverse_tree_retourne(child)
+
+
+def suppr_parentheses(node):
+    if node.value == "()" and node.nb_children == 1:
+        parent = node.parent
+        for i in range(parent.nb_children):
+            if parent.children[i] == node:
+                parent.children[i] = node.children[0]
+                node.children[0].parent = parent
+                return
+    for child in node.children:
+        suppr_parentheses(child)

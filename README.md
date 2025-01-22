@@ -23,7 +23,7 @@ Voici la structure des dossiers et fichiers principaux du projet :
 .
 ├── analyseur_lexical2.py        # Analyseur lexical
 ├── analyseur_syntaxique.py      # Analyseur syntaxique
-├── arbre.py                     # Manipulation des arbres syntaxiques
+├── arbre.py                     # classe arbre et visualisation
 ├── fichier_test/                # Dossier contenant les fichiers de test
 │   ├── fichier_test_1.mpy
 │   └── ...
@@ -77,7 +77,10 @@ python3 lancer_test.py
 ```
 
 ### Ajouter de nouveaux fichiers de test
-Placez vos fichiers Mini-Python (`.mpy`) dans le dossier `fichier_test`, puis relancez les tests.
+Pour lancer la compilation d'un nouveau fichier `new_fichier.mpy`:
+   ```bash
+   python3 main.py new_fichier.mpy
+   ```
 
 ---
 

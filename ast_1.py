@@ -38,7 +38,6 @@ def simplify_rules(parse_tree):
     elif value == "<suite>":
         ast = Arbre("<body>")
         for child in parse_tree.children:
-            # print ('body ; ', child.value)
             if child.value != '<start_stmt>':
                 ast.add_child(simplify_tree(child))
             else :
@@ -73,7 +72,6 @@ def simplify_rules(parse_tree):
 
     elif value == "<stmt>":
         for child in parse_tree.children:
-            #print('child_stmt : ',child.value)
 
             if child.value == "9":               # if
                 condition = simplify_tree(parse_tree.children[2])  # Condition
@@ -98,12 +96,10 @@ def simplify_rules(parse_tree):
                 ast.add_child(condition)
                 ast.add_child(body)
                 return ast
-            # pas de while ??
         return None
     
     elif value == "<suite_if>":
         for child in parse_tree.children:
-            #print('suit if : ',child.value)
             if child.value == "^":
                 return None
             elif child.value == "44":
@@ -130,11 +126,6 @@ def simplify_rules(parse_tree):
             else :
                 right = simplify_tree(parse_tree.children[0])
                 search_op = right
-                # while len(search_op.children) in [0,2]:
-                # if search_op.children == []
-                #     search_op
-                # if len(search_op.children) == 1:
-                #     search_op.add_child(left)
                 ast= Arbre(right.value)
                 ast.add_child(left)
                 for child in right.children:
@@ -158,16 +149,6 @@ def simplify_rules(parse_tree):
             expr2 = simplify_tree(parse_tree.children[0])       #right
             depth = simplify_tree(parse_tree.children[1])       # ??
             expr = simplify_tree(parse_tree.children[2])        #left
-            # if depth == None :
-            #     if expr2 == None:  
-            #         return expr
-            #     else :
-            #         ast= Arbre(expr2.value)
-            #         ast.add_child(expr)
-            #         for child in expr2.children:
-            #             ast.add_child(child)
-            #         return ast
-            # else : 
             ast_list = Arbre("<list>")
             ast_list.add_child(expr)
             L=simplify_depth(parse_tree.children[1],[])
@@ -201,7 +182,7 @@ def simplify_rules(parse_tree):
             expr = simplify_tree(parse_tree.children[1])        #left
             expr_not = Arbre("19")
             expr_not.add_child(expr)
-            if expr2 == None:  
+            if expr2 == None :  
                 return expr_not
             else :
                 ast= Arbre(expr2.value)
@@ -215,7 +196,7 @@ def simplify_rules(parse_tree):
             expr = simplify_tree(parse_tree.children[1])        #left
             expr_unaire = Arbre("2")
             #if expr2 == None: 
-            if expr.value not in ["21","22""19","12","13","23","24","25","26","1","2","3","4","6"]:
+            if expr.value not in ["21","22""19","12","13","23","24","25","26","1","2","3","30",'4',"6"]:
                 expr_unaire.add_child(expr) 
                 # ast= Arbre(expr.value)
                 # expr_unaire.add_child(expr.children[0])
@@ -234,8 +215,6 @@ def simplify_rules(parse_tree):
         return None  # Expression simple
     
     elif value == "<expr2>":
-        # for child in parse_tree.children :
-        #     print (child.value)
         if parse_tree.children[0].value == '^':
             return None
         
@@ -244,13 +223,8 @@ def simplify_rules(parse_tree):
                 print ('expr2 : ',child.value)
             binop = simplify_tree(parse_tree.children[2])
             expr = simplify_tree(parse_tree.children[1])
-            # if expr.value not in ["21","22""19","12","13","23","24","25","26","1","2","3","4","6"]:
             binop.add_child(expr)
             return binop
-            #gerer prio
-            # ast = manage_prio_op(binop,expr)
-            # ast.add_child(simplify_tree(parse_tree.children[0]))
-            # return ast
         
         #autre possibilité
 
@@ -283,7 +257,6 @@ def simplify_rules(parse_tree):
 
 
     elif value == "<simple_stmt>":
-        # print (parse_tree.children[0].value,",",parse_tree.children[1].value)
 
         if parse_tree.children[1] and parse_tree.children[1].value == "35":  # RETURN
             expr = simplify_tree(parse_tree.children[0])
@@ -294,9 +267,7 @@ def simplify_rules(parse_tree):
         elif parse_tree.children[0].value == "<suite_ident_simple_stmt>":
             if parse_tree.children[1].value == "40" and len(parse_tree.children) > 1: #cas d'une affectation
                 affect_suite = parse_tree.children[0] #Le noeud contenant la suite de l'affectation
-                #print (affect_suite.children[0].value,',',affect_suite.children[1].value)
                 if affect_suite.children[1] and affect_suite.children[1].value == "43":
-                    #print("la ",affect_suite.children[0].value)
                     expression = simplify_tree(affect_suite.children[0])  # Simplifie l'expression d'affectation
                     ast = Arbre("43")
                     ast.add_child(Arbre(parse_tree.children[1].num_identifiant))  # Ajouter le nom de la variable
@@ -305,7 +276,6 @@ def simplify_rules(parse_tree):
                 elif affect_suite.children[0] == '<suite_ident_expr>':
                     return simplify_tree(affect_suite.children[0])
         
-        # pas vérifié
         elif parse_tree.children[0].value == "19": #cas d'un Not suivi d'expression
             
             expression = simplify_tree(parse_tree.children[1])
@@ -391,36 +361,6 @@ def simplify_depth(param_node,L):
     return L
 
 
-# def manage_prio_op(node1,node2):
-#     op1 = node1.value
-#     op2 = node2.value
-#     dict_op = {
-#     ("21",): 1,
-#     ("22",): 2,
-#     ("19",): 3,
-#     ("12", "13", "23", "24", "25", "26"): 4,
-#     ("1", "2"): 5,
-#     ("3", "4", "6"): 6
-# }
-#     for key in dict_op.keys():
-#         if op1 in key:
-#             op1_prio = dict_op[key]
-#         if op2 in key:
-#             op2_prio = dict_op[key]
-    
-#     if op1_prio < op2_prio:
-#         node1.add_child(node2)
-#         return node1
-#     else :
-#         node = Arbre(op2)
-#         node1.add_child(node2.children[0])
-#         node.add_child(node1)
-#         node.add_child(node2.children[1])
-#     return node
-
-
-
-
 def simplify_tree(parse_tree):
     """
     Simplifie un arbre de dérivation en AST.
@@ -450,3 +390,36 @@ def simplify_tree(parse_tree):
     #             simplified_node.add_child(simplified_child)
 
     return simplified_node
+
+
+
+
+def retourneur(node, values):
+    if node.value in values:
+        if node.nb_children == 2:
+            if node.children[1].value in values and node.children[1].nb_children == 2:
+                a_retourner = node.children[1]
+                parent = node.parent
+                for i in range(parent.nb_children):
+                    if parent.children[i] == node:
+                        parent.children[i] = a_retourner
+                        a_retourner.parent = parent
+                        
+                        node.children[1] = a_retourner.children[0]
+                        node.children[1].parent = node
+                        
+                        a_retourner.children[0] = node
+                        node.parent = a_retourner
+                        
+                        traverse_tree_retourne(a_retourner)
+                        return
+
+def traverse_tree_retourne(node):
+    retourneur(node, ["1", "2"])
+    #retourneur(node, ["3", "4", "6"])
+    retourneur(node, ["3", "30", "6"])
+    retourneur(node, ["22"])
+    retourneur(node, ["21"])
+
+    for child in node.children:
+        traverse_tree_retourne(child)

@@ -1,6 +1,6 @@
 from grammaire import *
 import analyseur_lexical as analex
-from arbre import Arbre, visualize_ast
+from arbre_classe import Arbre, visualize_ast
 
 def analyse_syntaxique(liste_token):
     grammaire = Grammaire("docs/Grammaire_PCL.txt")

@@ -1,4 +1,4 @@
-from arbre import Arbre
+from arbre_classe import Arbre
 
 
 def simplify_rules(parse_tree):

@@ -1,7 +1,7 @@
 import analyseur_lexical as analex
 import analyseur_syntaxique_ss_erreru as anasyn
-import ast as ast_const
-import arbre
+import ast_utils as ast_const
+import arbre_classe
 import sys
 
 def analyseur(code_entré, visualisation=True):
@@ -20,7 +20,7 @@ def analyseur(code_entré, visualisation=True):
     
     ast = ast_const.ast_final(arbre_derivation)
     if visualisation:
-        arbre.visualize_ast(ast)
+        arbre_classe.visualize_ast(ast)
     return 1
 
 if __name__ == "__main__":

@@ -43,7 +43,6 @@ def analyse_syntaxique(liste_token):
                                     break
                             new_node.num_identifiant = nom
                         except:
-                            print("est ce que ca marche")
                             break
                     if cara[0] == 41:
                         try:
@@ -53,7 +52,6 @@ def analyse_syntaxique(liste_token):
                                     break
                             new_node.num_identifiant = nom
                         except:
-                            print("est ce que ca marche")
                             break
                     if cara[0] == 42:
                         try:
@@ -64,7 +62,6 @@ def analyse_syntaxique(liste_token):
                                     break
                             new_node.num_identifiant = nom
                         except:
-                            print("est ce que ca marche")
                             break
                     #print(nom)
                     noeud_parent.add_child(new_node)

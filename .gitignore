@@ -4,3 +4,4 @@ ast_tree*
 *.cpy
 Image_A*
 venv
+*.png

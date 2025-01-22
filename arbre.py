@@ -2,7 +2,6 @@ from graphviz import Digraph
 import random
 
 
-
 class Arbre:
     def __init__(self, value):
         self.value = str(value)  # Convertir en chaîne
@@ -62,7 +61,7 @@ def visualize_ast(root):
     add_nodes_edges(root)
     a = random.randint(0,100)
     print(a)
-    dot.render(f'Image_A_{a}', format='png', cleanup=True)  # Générer le fichier PNG
+    dot.render(f'AST', format='png', cleanup=True)  # Générer le fichier PNG
 
 if __name__ == '__main__':
     # Utilisation

@@ -419,6 +419,32 @@ def traverse_tree_retourne(node):
         traverse_tree_retourne(child)
 
 
+def retourneur2(node, values):
+    if node.children[0].value in values:
+        a_retourner = node.children[0]
+        parent = node.parent
+        for i in range(parent.nb_children):
+            if parent.children[i] == node:
+                parent.children[i] = a_retourner
+                a_retourner.parent = parent
+                
+                node.children[0] = a_retourner.children[0]
+                node.children[0].parent = node
+                
+                a_retourner.children[0] = node
+                node.parent = a_retourner
+                
+                descend_not(a_retourner)
+                return
+            
+def descend_not(node):
+    if node.value in ["19"]:
+        retourneur2(node, ["22", "21"])
+        
+    for child in node.children:
+        descend_not(child)
+
+
 def suppr_parentheses(node):
     if node.value == "()" and node.nb_children == 1:
         parent = node.parent

@@ -24,7 +24,7 @@ Voici la structure des dossiers et fichiers principaux du projet :
 ├── analyseur_lexical.py         # Analyseur lexical
 ├── analyseur_syntaxique.py      # Analyseur syntaxique
 ├── arbre.py                     # classe arbre et visualisation
-├── ast.py                       # simplification de l'arbre
+├── ast_utils.py                       # simplification de l'arbre
 ├── fichier_test/                # Dossier contenant les fichiers de test
 │   ├── fichier_test_1.mpy
 │   └── ...

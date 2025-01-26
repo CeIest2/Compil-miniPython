@@ -4,6 +4,7 @@
 
 Ce projet est un compilateur pour un sous-ensemble du langage Python, appelé **Mini-Python**. Il permet d'analyser, de traiter et de tester des fichiers écrits dans ce langage simplifié.
 
+Une description du langauge mini-Pyhton est disponible dans `docs/sujet.pdf`.
 ---
 
 ## Fonctionnalités
@@ -68,33 +69,6 @@ ou pour exécuter 1 seul fichier test
 ```bash
 python3 main.py <chemin-du-fichier>
 ```
-
-### Ajouter de nouveaux fichiers de test
-Pour lancer la compilation d'un nouveau fichier `new_fichier.mpy`:
-   ```bash
-   python3 main.py new_fichier.mpy
-   ```
-
----
-
-## Contribuer
-
-Les contributions sont les bienvenues ! Suivez ces étapes pour contribuer au projet :
-
-1. Forkez ce dépôt.
-2. Créez une branche pour votre fonctionnalité :
-   ```bash
-   git checkout -b nouvelle-fonctionnalite
-   ```
-3. Faites vos modifications et commitez-les :
-   ```bash
-   git commit -m "Ajout d'une nouvelle fonctionnalité"
-   ```
-4. Poussez vos modifications :
-   ```bash
-   git push origin nouvelle-fonctionnalite
-   ```
-5. Ouvrez une pull request.
 
 ---
 

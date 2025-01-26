@@ -5,6 +5,7 @@
 Ce projet est un compilateur pour un sous-ensemble du langage Python, appelé **Mini-Python**. Il permet d'analyser, de traiter et de tester des fichiers écrits dans ce langage simplifié.
 
 Une description du langauge mini-Pyhton est disponible dans `docs/sujet.pdf`.
+
 ---
 
 ## Fonctionnalités
